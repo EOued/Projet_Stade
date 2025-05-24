@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.40.0 -->
+<interface>
+  <requires lib="gtk+" version="3.24"/>
+  <object class="GtkListStore" id="gameformat_liststore">
+    <columns>
+      <!-- column-name gameformat -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Whole</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Half</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Quarter</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkListStore" id="gameformat_priority_liststore">
+    <columns>
+      <!-- column-name gameformat_priority -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0">Natural</col>
+      </row>
+      <row>
+        <col id="0">Synthetic</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkAdjustment" id="gametime_adjustment">
+    <property name="upper">24</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="gametime_priority_adjustment">
+    <property name="upper">100</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkListStore" id="teams_liststore">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name format -->
+      <column type="gchararray"/>
+      <!-- column-name gametime -->
+      <column type="guint64"/>
+      <!-- column-name gametime_priority -->
+      <column type="guint64"/>
+      <!-- column-name gameformat_priority -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">The High Five</col>
+        <col id="1" translatable="yes">Terrain Entier</col>
+        <col id="2" translatable="yes">10</col>
+        <col id="3">2</col>
+        <col id="4" translatable="yes">Naturel</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Sixers</col>
+        <col id="1" translatable="yes">Demi Terrain</col>
+        <col id="2" translatable="yes">7</col>
+        <col id="3">3</col>
+        <col id="4" translatable="yes">Synthétique</col>
+      </row>
+    </data>
+  </object>
+  <object class="GtkWindow" id="teams_window">
+    <property name="can-focus">False</property>
+    <child>
+      <object class="GtkBox" id="main_box">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkTreeView" id="teams_treeview">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="model">teams_liststore</property>
+            <property name="enable-grid-lines">horizontal</property>
+            <property name="tooltip-column">0</property>
+            <child internal-child="selection">
+              <object class="GtkTreeSelection"/>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="name">
+                <property name="resizable">True</property>
+                <property name="sizing">autosize</property>
+                <property name="title" translatable="yes">Name</property>
+                <child>
+                  <object class="GtkCellRendererText"/>
+                  <attributes>
+                    <attribute name="text">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="gameformat">
+                <property name="resizable">True</property>
+                <property name="sizing">autosize</property>
+                <property name="title" translatable="yes">Game Format</property>
+                <child>
+                  <object class="GtkCellRendererText"/>
+                  <attributes>
+                    <attribute name="text">1</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="gametime">
+                <property name="resizable">True</property>
+                <property name="sizing">autosize</property>
+                <property name="title" translatable="yes">Game Time</property>
+                <child>
+                  <object class="GtkCellRendererText"/>
+                  <attributes>
+                    <attribute name="text">2</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="gametime_priority">
+                <property name="resizable">True</property>
+                <property name="sizing">autosize</property>
+                <property name="title" translatable="yes">Game Time Priority</property>
+                <child>
+                  <object class="GtkCellRendererText"/>
+                  <attributes>
+                    <attribute name="text">3</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkTreeViewColumn" id="gameformat_priority">
+                <property name="resizable">True</property>
+                <property name="sizing">autosize</property>
+                <property name="title" translatable="yes">Game Format Priority</property>
+                <child>
+                  <object class="GtkCellRendererText"/>
+                  <attributes>
+                    <attribute name="text">4</attribute>
+                  </attributes>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="teams_adder_box">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">5</property>
+            <property name="margin-end">5</property>
+            <property name="margin-top">5</property>
+            <property name="margin-bottom">5</property>
+            <property name="hexpand">True</property>
+            <property name="spacing">5</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkEntry" id="name_entry">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="placeholder-text" translatable="yes">Team Name</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBox" id="gameformat_entry">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="model">gameformat_liststore</property>
+                <property name="active">0</property>
+                <property name="has-entry">True</property>
+                <property name="entry-text-column">0</property>
+                <property name="id-column">0</property>
+                <property name="active-id">whole</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="can-focus">False</property>
+                    <property name="placeholder-text" translatable="yes">Select Game Format</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="time_entry">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="adjustment">gametime_adjustment</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSpinButton" id="gametime_priority_entry">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="max-length">2</property>
+                <property name="caps-lock-warning">False</property>
+                <property name="input-purpose">digits</property>
+                <property name="adjustment">gametime_priority_adjustment</property>
+                <property name="numeric">True</property>
+                <property name="update-policy">if-valid</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBox" id="gameformat_priority_entry">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="model">gameformat_priority_liststore</property>
+                <property name="active">0</property>
+                <property name="has-entry">True</property>
+                <property name="entry-text-column">0</property>
+                <property name="id-column">0</property>
+                <child internal-child="entry">
+                  <object class="GtkEntry">
+                    <property name="can-focus">False</property>
+                    <property name="placeholder-text" translatable="yes">Select GF Priority</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="team_add_button">
+                <property name="label" translatable="yes">Add</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">5</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack-type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
