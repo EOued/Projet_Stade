@@ -2,21 +2,21 @@
 <!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkAdjustment" id="natural_terrains_number_adjustment">
+  <object class="GtkAdjustment" id="natural_fields_number_adjustment">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkTextBuffer" id="natural_terrains_number_tb">
-    <property name="text" translatable="yes">Natural Terrains Number</property>
+  <object class="GtkTextBuffer" id="natural_fields_number_tb">
+    <property name="text" translatable="yes">Natural Fields Number</property>
   </object>
-  <object class="GtkAdjustment" id="synthetic_terrains_number_adjustment">
+  <object class="GtkAdjustment" id="synthetic_fields_number_adjustment">
     <property name="upper">100</property>
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkTextBuffer" id="synthetic_terrains_number_tb">
-    <property name="text" translatable="yes">Synthetic Terrains Number</property>
+  <object class="GtkTextBuffer" id="synthetic_fields_number_tb">
+    <property name="text" translatable="yes">Synthetic Fields Number</property>
   </object>
   <object class="GtkWindow" id="settings_window">
     <property name="can-focus">False</property>
@@ -33,14 +33,14 @@
             <property name="can-focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkTextView" id="natural_terrains_number">
+              <object class="GtkTextView" id="natural_fields_number">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="valign">center</property>
                 <property name="editable">False</property>
                 <property name="wrap-mode">word</property>
                 <property name="justification">center</property>
-                <property name="buffer">natural_terrains_number_tb</property>
+                <property name="buffer">natural_fields_number_tb</property>
                 <property name="accepts-tab">False</property>
               </object>
               <packing>
@@ -50,10 +50,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="natural_terrains_number_entry">
+              <object class="GtkSpinButton" id="natural_fields_number_entry">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="adjustment">natural_terrains_number_adjustment</property>
+                <property name="adjustment">natural_fields_number_adjustment</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -74,12 +74,12 @@
             <property name="can-focus">False</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkTextView" id="synthetic_terrains_number">
+              <object class="GtkTextView" id="synthetic_fields_number">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="valign">center</property>
                 <property name="justification">center</property>
-                <property name="buffer">synthetic_terrains_number_tb</property>
+                <property name="buffer">synthetic_fields_number_tb</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -88,10 +88,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSpinButton" id="synthetic_terrains_number_entry">
+              <object class="GtkSpinButton" id="synthetic_fields_number_entry">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="adjustment">synthetic_terrains_number_adjustment</property>
+                <property name="adjustment">synthetic_fields_number_adjustment</property>
               </object>
               <packing>
                 <property name="expand">False</property>
