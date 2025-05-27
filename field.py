@@ -53,12 +53,9 @@ class Field:
         """
         print(f"\"{self.name}\":")
         for i in range(7):
-            print(DAYS[i])
-            print("-" * 5)
+            print(f"\t{DAYS[i]}")
             for j in range(len(self.periods[self.key[i]])):
-                print(f"Period: {self.periods[self.key[i]][j][0]} h")
-                print(self.daysperiods[i][j])
-            print()
+                print(f"\t\tPeriod: {self.periods[self.key[i]][j][0]} h: {self.daysperiods[i][j]}")
         return
 
     def fit(self, name: str, duration: int) -> int:

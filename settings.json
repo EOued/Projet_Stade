@@ -1,6 +1,3 @@
 {
-  "terrains_number": {
-    "natural": 3,
-    "synthetic": 2
-  }
+  "repartition": 5
 }

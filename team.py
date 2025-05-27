@@ -31,3 +31,9 @@ class Team:
         print(f"\tGame time: {self.gametime}")
         print(f"\tPriority: {self.priority}")
         print(f"\tField type: {self.fieldtype.name}")
+        return
+
+    def set_gametime(self,decrement:int):
+        self.gametime = decrement
+        return
+        
