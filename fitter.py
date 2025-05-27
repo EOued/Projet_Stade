@@ -23,3 +23,6 @@ for i in range(2):
     for _ in range(ol.settings_config["fields_number"][fieldtypestr[i]]):
         fields.append(fieldtypeclass[i](periods))
 
+for team in teams:
+    team.print()
+    print()

@@ -1,8 +1,11 @@
 from default import DAYS, FieldPortion
 
+
 # Defined on a week
 class Field:
-    def __init__(self, periods: list[list[int]], portion: FieldPortion = FieldPortion.WHOLE):
+    def __init__(
+        self, periods: list[list[int]], portion: FieldPortion = FieldPortion.WHOLE
+    ):
         self.periods = periods
         self.Monperiods: list[list[str]] = []
         self.Tueperiods: list[list[str]] = []
@@ -34,11 +37,14 @@ class Field:
             self.Sunperiods,
         ]
 
-        self.portion = portion
+        self.portion = (
+            portion if isinstance(portion, FieldPortion) else FieldPortion(portion)
+        )
 
     def set_period(self, portion: FieldPortion):
-        self.portion = portion
-    
+        self.portion = (
+            portion if isinstance(portion, FieldPortion) else FieldPortion(portion)
+        )
 
     def print(self):
         """
