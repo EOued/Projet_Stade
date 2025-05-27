@@ -48,11 +48,3 @@ while teams and sf_index < len(synthetic_fields) and nf_index < len(natural_fiel
         team.set_gametime(unfitted_hours)
         teams.append(team)
 
-    if team.fieldtype == FieldType.NATURAL:
-        print("Natural field(s):")
-        for field in natural_fields:
-            field.print()
-    else:
-        print("Synthetic field(s):")
-        for field in synthetic_fields:
-            field.print()
