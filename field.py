@@ -45,7 +45,7 @@ class Field:
             print()
 
     # first fit, max fit if first fit not found
-    def fit(self, name: str, duration: int):
+    def fit(self, name: str, duration: int) -> int:
         best_fit = (-1, -1)
         best_fit_size = -1
         for i in range(len(self.daysperiods)):
@@ -69,3 +69,20 @@ class Field:
         for k in range(size):
             period[index + k] = name
         return duration - size
+
+
+class Natural(Field):
+    def __init__(self, periods: list[tuple[int, int]]):
+        super().__init__(periods)
+        self.hours_availables = 15
+    
+    def fit(self, name: str, duration: int) -> int:
+        if self.hours_availables == 0: return duration  
+        fitted_hours = super().fit(name, min(self.hours_availables, duration))
+        self.hours_availables -= fitted_hours
+        return fitted_hours
+
+
+
+
+    
