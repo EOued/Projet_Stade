@@ -36,6 +36,9 @@ class Field:
         ]
 
     def print(self):
+        """
+        Print all periods.
+        """
         for i in range(7):
             print(DAYS[i])
             print("-" * 5)
@@ -43,9 +46,21 @@ class Field:
                 print(f"Period: {self.periods[j][0]} h")
                 print(self.daysperiods[i][j])
             print()
+        return
 
-    # first fit, max fit if first fit not found
     def fit(self, name: str, duration: int) -> int:
+        """
+        Tries to fit the duration given in a continuous period.
+        The function will first try to fit the whole duration in the first period that can fit it.
+        If there is no periods that allows for it, the function will try to fit the maximum number of hours in a period.
+
+        Parameters:
+        name (str): The name of the team.
+        duration (int): The numbers of hours to fit.
+
+        Returns:
+        The number of hours that have not been fitted.
+        """
         best_fit = (-1, -1)
         best_fit_size = -1
         for i in range(len(self.daysperiods)):
@@ -75,14 +90,23 @@ class Natural(Field):
     def __init__(self, periods: list[tuple[int, int]]):
         super().__init__(periods)
         self.hours_availables = 15
-    
+
     def fit(self, name: str, duration: int) -> int:
-        if self.hours_availables == 0: return duration  
+        """
+        Tries to fit the duration given in a continuous period.
+        The function will first try to fit the whole duration in the first period that can fit it.
+        If there is no periods that allows for it, the function will try to fit the maximum number of hours in a period.
+        The function will stops when the number of hours fitted is at 15.
+
+        Parameters:
+        name (str): The name of the team.
+        duration (int): The numbers of hours to fit.
+
+        Returns:
+        The number of hours that have not been fitted.
+        """
+        if self.hours_availables == 0:
+            return duration
         fitted_hours = super().fit(name, min(self.hours_availables, duration))
         self.hours_availables -= fitted_hours
         return fitted_hours
-
-
-
-
-    
