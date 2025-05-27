@@ -26,7 +26,7 @@ class Team:
         """
         Prints the team.
         """
-        print(f"Team \"{self.name}\":")
+        print(f"\"{self.name}\":")
         print(f"\tField portion: {self.fieldportion.name}")
         print(f"\tGame time: {self.gametime}")
         print(f"\tPriority: {self.priority}")

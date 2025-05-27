@@ -18,11 +18,13 @@ fields: list[Field] = []
 fieldtypeclass = [Natural, Field]
 fieldtypestr = ["natural", "synthetic"]
 
-for i in range(2):
-    periods = ol.settings_config["fields_periods"][fieldtypestr[i]]
-    for _ in range(ol.settings_config["fields_number"][fieldtypestr[i]]):
-        fields.append(fieldtypeclass[i](periods))
+for field_name, field_values in ol.fields_config.items():
+    fields.append(
+        Natural(field_name, field_values["periods"])
+        if field_values["type"] == 0
+        else Field(field_name, field_values["periods"])
+    )
 
-for team in teams:
-    team.print()
+for field in fields:
+    field.print()
     print()

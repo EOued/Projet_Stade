@@ -4,8 +4,12 @@ from default import DAYS, FieldPortion
 # Defined on a week
 class Field:
     def __init__(
-        self, periods: list[list[int]], portion: FieldPortion = FieldPortion.WHOLE
+        self,
+        name: str,
+        periods: dict[str, list[list[int]]],
+        portion: FieldPortion = FieldPortion.WHOLE,
     ):
+        self.name = name
         self.periods = periods
         self.Monperiods: list[list[str]] = []
         self.Tueperiods: list[list[str]] = []
@@ -18,15 +22,6 @@ class Field:
         self.min = min(self.periods, key=lambda elem: elem[-1])[1]
         self.max = max(self.periods, key=lambda elem: elem[-1])[1]
 
-        for i in range(len(self.periods)):
-            self.Monperiods.append([""] * self.periods[i][-1])
-            self.Tueperiods.append([""] * self.periods[i][-1])
-            self.Wenperiods.append([""] * self.periods[i][-1])
-            self.Thuperiods.append([""] * self.periods[i][-1])
-            self.Friperiods.append([""] * self.periods[i][-1])
-            self.Satperiods.append([""] * self.periods[i][-1])
-            self.Sunperiods.append([""] * self.periods[i][-1])
-
         self.daysperiods = [
             self.Monperiods,
             self.Tueperiods,
@@ -36,6 +31,12 @@ class Field:
             self.Satperiods,
             self.Sunperiods,
         ]
+
+        self.key = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+
+        for day in range(7):
+            for i in range(len(self.periods[self.key[day]])):
+                self.daysperiods[day].append([""] * self.periods[self.key[day]][i][-1])
 
         self.portion = (
             portion if isinstance(portion, FieldPortion) else FieldPortion(portion)
@@ -50,11 +51,12 @@ class Field:
         """
         Print all periods.
         """
+        print(f"\"{self.name}\":")
         for i in range(7):
             print(DAYS[i])
             print("-" * 5)
-            for j in range(len(self.periods)):
-                print(f"Period: {self.periods[j][0]} h")
+            for j in range(len(self.periods[self.key[i]])):
+                print(f"Period: {self.periods[self.key[i]][j][0]} h")
                 print(self.daysperiods[i][j])
             print()
         return
@@ -98,8 +100,13 @@ class Field:
 
 
 class Natural(Field):
-    def __init__(self, periods: list[tuple[int, int]]):
-        super().__init__(periods)
+    def __init__(
+        self,
+        name: str,
+        periods: dict[str, list[list[int]]],
+        portion: FieldPortion = FieldPortion.WHOLE,
+    ):
+        super().__init__(name, periods, portion)
         self.hours_availables = 15
 
     def fit(self, name: str, duration: int) -> int:
