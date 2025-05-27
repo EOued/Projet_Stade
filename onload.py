@@ -11,7 +11,7 @@ def open_file(openSettings: bool = False):
         return json.load(file)
 
 
-def onload():
+def load():
     global settings_config
     global teams_config
     settings_config = open_file(True)
