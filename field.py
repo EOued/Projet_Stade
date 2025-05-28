@@ -51,7 +51,7 @@ class Field:
         """
         Print all periods.
         """
-        print(f"\"{self.name}\":")
+        print(f"\"{self.name}\" - {self.portion.name}:")
         for i in range(7):
             print(f"\t{DAYS[i]}")
             for j in range(len(self.periods[self.key[i]])):
