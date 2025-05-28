@@ -90,7 +90,6 @@ class Field:
         period = self.daysperiods[best_fit[0]][best_fit[1]]
         size = period.count("")
         index = period.index("")
-
         for k in range(size):
             period[index + k] = name
         return duration - size
@@ -122,6 +121,8 @@ class Natural(Field):
         """
         if self.hours_availables == 0:
             return duration
-        fitted_hours = super().fit(name, min(self.hours_availables, duration))
-        self.hours_availables -= fitted_hours
-        return fitted_hours
+
+        max_tofit = min(duration, self.hours_availables)
+        unfitted_hours = super().fit(name, max_tofit)
+        self.hours_availables -= (max_tofit - unfitted_hours)
+        return unfitted_hours + (duration - max_tofit)
