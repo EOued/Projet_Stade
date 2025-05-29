@@ -42,20 +42,36 @@ class Field:
             portion if isinstance(portion, FieldPortion) else FieldPortion(portion)
         )
 
-    def set_period(self, portion: FieldPortion):
-        self.portion = (
-            portion if isinstance(portion, FieldPortion) else FieldPortion(portion)
+    def __eq__(self, other):
+        if not isinstance(other, Field):
+            return False
+        same_periods = True
+        for a, b in zip(self.daysperiods, other.daysperiods):
+            same_periods &= a == b
+        return (
+            self.name == other.name
+            and self.portion.value == other.portion.value
+            and same_periods
         )
+
+    def incr_portion(self):
+        self.portion = FieldPortion(self.portion.value + 1)
+
+    def decr_portion(self):
+        self.portion = FieldPortion(self.portion.value - 1)
+
 
     def print(self):
         """
         Print all periods.
         """
-        print(f"\"{self.name}\" - {self.portion.name}:")
+        print(f'"{self.name}" - {self.portion.name}:')
         for i in range(7):
             print(f"\t{DAYS[i]}")
             for j in range(len(self.periods[self.key[i]])):
-                print(f"\t\tPeriod: {self.periods[self.key[i]][j][0]} h: {self.daysperiods[i][j]}")
+                print(
+                    f"\t\tPeriod: {self.periods[self.key[i]][j][0]} h: {self.daysperiods[i][j]}"
+                )
         return
 
     def fit(self, name: str, duration: int) -> int:
@@ -124,5 +140,5 @@ class Natural(Field):
 
         max_tofit = min(duration, self.hours_availables)
         unfitted_hours = super().fit(name, max_tofit)
-        self.hours_availables -= (max_tofit - unfitted_hours)
+        self.hours_availables -= max_tofit - unfitted_hours
         return unfitted_hours + (duration - max_tofit)

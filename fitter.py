@@ -1,7 +1,8 @@
 from field import Field, Natural
 from team import Team
-from default import FieldType
+from default import FieldPortion, FieldType
 import onload as ol
+import copy
 
 ol.load()
 
@@ -57,10 +58,16 @@ while teams:
             if team.fieldtype == FieldType.NATURAL
             else synthetic_fields[sf_index]
         )
+        fields = natural_fields if team.fieldtype == FieldType.NATURAL else synthetic_fields
+        index = nf_index if team.fieldtype == FieldType.NATURAL else sf_index
+        print(field.portion, team.fieldportion)
+        if field.portion != team.fieldportion:
+            field.incr_portion()
+            fields.insert(index+1, copy.deepcopy(field))
+            continue
 
-        print(f"{team.name}, {team.gametime}")
         unfitted_hours = field.fit(team.name, team.gametime)
-        print(unfitted_hours)
+        print(f"{team.name}, {team.gametime}, {unfitted_hours}")
         # Current field can't fit any team
         if unfitted_hours == team.gametime:
             if team.fieldtype == FieldType.NATURAL:
@@ -76,6 +83,7 @@ while teams:
     if subteam:
         print("Can't fit all teams")
         break
+
 for field in natural_fields:
     field.print()
 for field in synthetic_fields:
