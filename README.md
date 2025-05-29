@@ -1,14 +1,19 @@
 ### Team settings
-- Min playtime 
-- Max playtime
-- Play once a day
-- Excluded days
+- Min playtime block size [Implementation started]
+- Max playtime block size [Implementation started]
+- Play once a day [Not yet implemented]
+- Excluded days [Not yet implemented]
 
 ### Teams json format
 
 ```json
 {
-	"team_name": [fieldportion(0=Whole,1=Half,2=Quarter), gametime(int), priority(uint), fieldtype(0=Natural,1=Synthetic)]
+	"team_name": [fieldportion(0=Whole,1=Half,2=Quarter), 
+		          gametime(int), 
+				  priority(uint), 
+				  fieldtype(0=Natural,1=Synthetic)
+				  [min_playtime_block_size, max_playtime_block_size] 
+				  ]
 }
 ```
 
