@@ -60,12 +60,13 @@ class Field:
     def decr_portion(self):
         self.portion = FieldPortion(self.portion.value - 1)
 
-
     def print(self):
         """
         Print all periods.
         """
-        print(f'"{self.name}" - {self.portion.name}:')
+        print(
+            f'"{self.name}" - {self.portion.name} - {"Natural" if isinstance(self, Natural) else "Synthetic"}:'
+        )
         for i in range(7):
             print(f"\t{DAYS[i]}")
             for j in range(len(self.periods[self.key[i]])):
@@ -74,7 +75,7 @@ class Field:
                 )
         return
 
-    def fit(self, name: str, duration: int) -> int:
+    def fit(self, name: str, duration: int, min_blocksize=1, max_blocksize=24) -> int:
         """
         Tries to fit the duration given in a continuous period.
         The function will first try to fit the whole duration in the first period that can fit it.
@@ -87,27 +88,44 @@ class Field:
         Returns:
         The number of hours that have not been fitted.
         """
+        if duration < min_blocksize:
+            # Failure : The duration we try to fit is smaller than the min duration
+            return -2
+        print("fit function", name, min_blocksize, max_blocksize)
         best_fit = (-1, -1)
         best_fit_size = -1
+        duration_ti = min(duration, max_blocksize)
+        # If fitting the whole block, then the unfitted block is smaller than min_blocksize
+        if 0 < duration - duration_ti < min_blocksize:
+            duration_ti = min(duration_ti, duration - min_blocksize)
+
+        print(f"duration {duration}, duration_ti {duration_ti}")
         for i in range(len(self.daysperiods)):
             dayperiod = self.daysperiods[i]
             for j in range(len(dayperiod)):
                 period = dayperiod[j]
-                if duration <= period.count(""):
+                count = period.count("")
+                print(f"count {count}")
+                if duration_ti <= count:
                     index = period.index("")
-                    for k in range(duration):
-                        period[index + k] = name
-                    return 0
-                if period.count("") > best_fit_size:
-                    best_fit_size = period.count("")
+                    period[index : index + duration_ti] = [name] * duration_ti
+                    return duration - duration_ti
+
+                if count >= min_blocksize and count > best_fit_size:
+                    best_fit_size = count
                     best_fit = (i, j)
 
-        # No perfect fit found, setting the first fit
+        # There is no best fit found
+        if best_fit_size == -1:
+            return -1
+
+        # No perfect fit found, setting the best fit
+        print("BEST FIT")
         period = self.daysperiods[best_fit[0]][best_fit[1]]
-        size = period.count("")
+        size = min(period.count(""), max_blocksize)
         index = period.index("")
-        for k in range(size):
-            period[index + k] = name
+        print(period, size, index)
+        period[index : index + size] = [name] * size
         return duration - size
 
 
@@ -121,7 +139,11 @@ class Natural(Field):
         super().__init__(name, periods, portion)
         self.hours_availables = 15
 
-    def fit(self, name: str, duration: int) -> int:
+    def print(self):
+        super().print()
+        print(f"\tHours available {self.hours_availables}")
+
+    def fit(self, name: str, duration: int, min_blocksize=1, max_blocksize=24) -> int:
         """
         Tries to fit the duration given in a continuous period.
         The function will first try to fit the whole duration in the first period that can fit it.
@@ -139,6 +161,6 @@ class Natural(Field):
             return duration
 
         max_tofit = min(duration, self.hours_availables)
-        unfitted_hours = super().fit(name, max_tofit)
+        unfitted_hours = super().fit(name, max_tofit, min_blocksize, max_blocksize)
         self.hours_availables -= max_tofit - unfitted_hours
         return unfitted_hours + (duration - max_tofit)

@@ -9,6 +9,7 @@ class Team:
         gametime: int,
         priority: int,
         fieldtype: FieldType,
+        blocksize: list[int]
     ):
         self.name: str = name
         self.fieldportion: FieldPortion = (
@@ -21,6 +22,8 @@ class Team:
         self.fieldtype: FieldType = (
             fieldtype if isinstance(fieldtype, FieldType) else FieldType(fieldtype)
         )
+        self.blocksize = blocksize
+        print(f"Blocksize {self.blocksize}")
 
     def print(self):
         """

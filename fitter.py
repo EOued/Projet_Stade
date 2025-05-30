@@ -32,6 +32,7 @@ Using multi-level sort: first field type, then priority
 
 teams.sort(key=lambda x: (x.fieldportion.value, x.priority))
 
+unfitted_teams = []
 
 sf_index, nf_index = 0, 0
 while teams:
@@ -58,22 +59,56 @@ while teams:
             if team.fieldtype == FieldType.NATURAL
             else synthetic_fields[sf_index]
         )
-        fields = natural_fields if team.fieldtype == FieldType.NATURAL else synthetic_fields
+        fields = (
+            natural_fields if team.fieldtype == FieldType.NATURAL else synthetic_fields
+        )
         index = nf_index if team.fieldtype == FieldType.NATURAL else sf_index
+
         print(field.portion, team.fieldportion)
+
         if field.portion != team.fieldportion:
             field.incr_portion()
-            fields.insert(index+1, copy.deepcopy(field))
+            fields.insert(index + 1, copy.deepcopy(field))
             continue
 
-        unfitted_hours = field.fit(team.name, team.gametime)
+        print(team.blocksize)
+        print(*team.blocksize)
+        unfitted_hours = field.fit(team.name, team.gametime, *team.blocksize)
+
+        # Hours left for current team can't be fitted because they are smaller than the min. block size
+        if unfitted_hours == -2:
+            unfitted_teams.append(subteam.pop(0))
+            continue
+
+        # Failed to found a best fit, but the current field may be still used for other teams
+        if unfitted_hours == -1:
+            next_index = next(
+                (
+                    (
+                        i
+                        for i, x in enumerate(fields)
+                        if x.portion.value == field.portion.value + 1
+                    )
+                ),
+                -1,
+            )
+
+            if next_index == -1 or next_index < index:
+                fields.append(fields.pop(index))
+            else:
+                fields.insert(next_index, fields.pop(index))
+            continue
+
         print(f"{team.name}, {team.gametime}, {unfitted_hours}")
+
         # Current field can't fit any team
         if unfitted_hours == team.gametime:
             if team.fieldtype == FieldType.NATURAL:
                 nf_index += 1
             else:
                 sf_index += 1
+            print("+++++++++++Changed field++++++++++")
+            continue
 
         subteam.pop(0)
         if unfitted_hours != 0:
