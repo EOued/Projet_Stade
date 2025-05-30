@@ -17,12 +17,15 @@
 
 ```json
 {
-	"team_name": [fieldportion(0=Whole,1=Half,2=Quarter), 
+	"team_name": {
+		"values": [fieldportion(0=Whole,1=Half,2=Quarter), 
 		          gametime(int), 
 				  priority(uint), 
 				  fieldtype(0=Natural,1=Synthetic)
 				  [min_playtime_block_size, max_playtime_block_size] 
-				  ]
+				  ],
+	    "excluded_days": [int, int, int...] /* Binary mask (24 bits) for each days, 1 means that the hour is excluded. 0 is no day excluded, 16777215 whole day excluded. 128 for example means that 7h-8h is excluded*/
+    }	
 }
 ```
 
@@ -32,11 +35,6 @@
 {
 	"field_name": {
 	  "type": 0=Natural, 1=Synthetic,
-	  "periods": {
-		 "mon": [[start_hour(0-24), duration], [start_hour(0-24), duration]]
-		 "tue": []
-		 ...
-		 }
-	}
+	  "periods": [int, int, int] 	/* Binary mask (24 bits) for each days, 1 means that the field on specified hour is usable. 0 is no field unplayable for the day. 3840 for example means that field is available from 8 to 12*/}
 }
 ```
