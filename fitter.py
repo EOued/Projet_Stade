@@ -11,7 +11,7 @@ ol.load()
 teams: list[Team] = []
 
 for team_name, team_values in ol.teams_config.items():
-    teams.append(Team(team_name, *team_values))
+    teams.append(Team(team_name, *team_values["values"], *team_values["excluded_days"]))
 
 # Creating fields
 
@@ -73,7 +73,12 @@ while teams:
 
         print(team.blocksize)
         print(*team.blocksize)
-        unfitted_hours = field.fit(team.name, team.gametime, *team.blocksize)
+        unfitted_hours = field.fit(
+            team.name,
+            team.gametime,
+            *team.blocksize,
+            restricted_days=[~excluded_day for excluded_day in team.excluded_days],
+        )
 
         # Hours left for current team can't be fitted because they are smaller than the min. block size
         if unfitted_hours == -2:

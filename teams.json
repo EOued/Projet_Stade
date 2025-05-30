@@ -1,5 +1,14 @@
 {
-  "The High Five": [0, 10, 2, 0, [3, 4]],
-  "Gregarious Games": [0, 15, 2, 0, [3, 4]],
-  "Sixers": [1, 7, 3, 1, []]
+  "The High Five": {
+    "values": [0, 10, 2, 0, [3, 4]],
+    "excluded_days": [16777215]
+  },
+  "Gregarious Games": {
+    "values": [0, 15, 2, 0, [3, 4]],
+    "excluded_days": []
+  },
+  "Sixers": {
+    "values": [1, 7, 3, 1, []],
+    "excluded_days": []
+  }
 }

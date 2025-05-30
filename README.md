@@ -8,10 +8,10 @@
 
 
 ### Team settings
-- Min playtime block size [Implementation started]
-- Max playtime block size [Implementation started]
+- Min playtime block size [Implemented]
+- Max playtime block size [Implemented]
 - Play once a day [Not yet implemented]
-- Excluded days [Not yet implemented]
+- Excluded periods [Implemented]
 
 ### Teams json format
 

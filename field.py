@@ -113,7 +113,7 @@ class Field:
         duration: int,
         min_blocksize=1,
         max_blocksize=24,
-        restriction: int = 16777215,
+        restricted_days: list[int] = [16777215] * 7,
     ) -> int:
         """
         Tries to fit the duration given in a continuous period.
@@ -140,7 +140,7 @@ class Field:
 
         print(f"duration {duration}, duration_ti {duration_ti}")
         for day, dayperiod in enumerate(self.daysperiods):
-            available_periods = self.generate_periods_indexes(day, restriction)
+            available_periods = self.generate_periods_indexes(day, restricted_days[day])
 
             for index, period_indexes in enumerate(available_periods):
                 count = len(period_indexes)
@@ -161,11 +161,12 @@ class Field:
 
         # No perfect fit found, setting the best fit
         print("BEST FIT")
-        period_indexes = self.generate_periods_indexes(best_fit[0], restriction)[
+        day = best_fit[0]
+        period_indexes = self.generate_periods_indexes(day, restricted_days[day])[
             best_fit[1]
         ]
         size = min(len(period_indexes), max_blocksize)
-        self.daysperiods[best_fit[0]][period_indexes[0] : period_indexes[size - 1]] = [
+        self.daysperiods[day][period_indexes[0] : period_indexes[size - 1]] = [
             name
         ] * size
         return duration - size
@@ -191,7 +192,7 @@ class Natural(Field):
         duration: int,
         min_blocksize=1,
         max_blocksize=24,
-        restriction: int = 16777215,
+        restricted_days: list[int] = [16777215] * 7,
     ) -> int:
         """
         Tries to fit the duration given in a continuous period.
@@ -211,7 +212,7 @@ class Natural(Field):
 
         max_tofit = min(duration, self.hours_availables)
         unfitted_hours = super().fit(
-            name, max_tofit, min_blocksize, max_blocksize, restriction
+            name, max_tofit, min_blocksize, max_blocksize, restricted_days
         )
         self.hours_availables -= max_tofit - unfitted_hours
         return unfitted_hours + (duration - max_tofit)
