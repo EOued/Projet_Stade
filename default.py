@@ -5,7 +5,7 @@ FIELDTYPE = ["Natural Field", "Synthetic Field"]
 
 SETTINGS_FILE = "settings.json"
 TEAMS_FILE = "teams.json"
-FIELDS_FILE = "fields.json"
+FIELDS_FILE = "fields2.json"
 
 DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 

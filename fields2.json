@@ -1,0 +1,62 @@
+{
+  "Terrain 1": {
+    "type": 0,
+    "periods": {
+      "mon": 249600,
+      "tue": 3840,
+      "wed": 1036032,
+      "thu": 0,
+      "fri": 1036032,
+      "sat": 1036224,
+      "sun": 0
+    }
+  },
+  "Terrain 2": {
+    "type": 0,
+    "periods": {
+      "mon": 249600,
+      "tue": 3840,
+      "wed": 1036032,
+      "thu": 0,
+      "fri": 1036032,
+      "sat": 1036224,
+      "sun": 0
+    }
+  },
+  "Terrain 3": {
+    "type": 0,
+    "periods": {
+      "mon": 249600,
+      "tue": 0,
+      "wed": 1036032,
+      "thu": 0,
+      "fri": 1036032,
+      "sat": 1036224,
+      "sun": 0
+    }
+  },
+  "Terrain 4": {
+    "type": 1,
+    "periods": {
+      "mon": 249600,
+      "tue": 249600,
+      "wed": 1036032,
+      "thu": 0,
+      "fri": 1036032,
+      "sat": 1036224,
+      "sun": 0
+    }
+  },
+  "Terrain 5": {
+    "type": 1,
+    "periods": {
+      "mon": 0,
+      "tue": 0,
+      "wed": 0,
+      "thu": 0,
+      "fri": 0,
+      "sat": 1048512,
+      "sun": 1048512
+    }
+  }
+}
