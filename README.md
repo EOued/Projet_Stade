@@ -1,3 +1,12 @@
+### Dependancies
+- Python 3 (Tested on python 3.13.3)
+
+### Installation
+`git clone https://github.com/EOued/Projet_Stade.git`\
+`cd Projet_Stade`\
+`python fitter.py`
+
+
 ### Team settings
 - Min playtime block size [Implementation started]
 - Max playtime block size [Implementation started]
