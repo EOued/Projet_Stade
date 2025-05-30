@@ -6,7 +6,7 @@ class Field:
     def __init__(
         self,
         name: str,
-        periods: dict[str, int],
+        periods: list[int],
         portion: FieldPortion = FieldPortion.WHOLE,
     ):
         self.name = name
@@ -19,9 +19,6 @@ class Field:
         self.Satperiods: list[str] = [""] * 24
         self.Sunperiods: list[str] = [""] * 24
 
-        self.min = min(self.periods, key=lambda elem: elem[-1])[1]
-        self.max = max(self.periods, key=lambda elem: elem[-1])[1]
-
         self.daysperiods = [
             self.Monperiods,
             self.Tueperiods,
@@ -31,8 +28,6 @@ class Field:
             self.Satperiods,
             self.Sunperiods,
         ]
-
-        self.keys = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
         self.portion = (
             portion if isinstance(portion, FieldPortion) else FieldPortion(portion)
@@ -53,7 +48,7 @@ class Field:
     def generate_periods(
         self, day: int, restriction: int = 16777215, get_period_hours=False
     ):
-        periods_number = restriction & self.periods[self.keys[day]]
+        periods_number = restriction & self.periods[day]
         l = []
         sublist = []
         period_hours = []
@@ -73,7 +68,7 @@ class Field:
         return l
 
     def generate_periods_indexes(self, day: int, restriction: int = 16777215):
-        periods_number = restriction & self.periods[self.keys[day]]
+        periods_number = restriction & self.periods[day]
         l = []
         sublist = []
         for hour in range(24):
@@ -176,7 +171,7 @@ class Natural(Field):
     def __init__(
         self,
         name: str,
-        periods: dict[str, int],
+        periods: list[int],
         portion: FieldPortion = FieldPortion.WHOLE,
     ):
         super().__init__(name, periods, portion)
