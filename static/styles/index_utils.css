@@ -22,7 +22,7 @@
   gap: 3px;
 }
 
-#files > div {
+#files > div:not(.clickable) {
   background-color: var(--c6);
   flex: 1;
   border: 2px solid black;
@@ -61,7 +61,7 @@ input:focus {
   align-items: center;
 }
 
-#footer_div > div {
+.clickable {
   background-color: var(--c6);
   flex: 1;
   border: 2px solid black;
@@ -72,7 +72,7 @@ input:focus {
   align-items: center;
 }
 
-#footer_div > div:hover {
+.clickable:hover {
   background-color: var(--c5);
   border: 3px solid black;
   box-shadow: 1px 1px var(--c8);
