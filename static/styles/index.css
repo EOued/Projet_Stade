@@ -1,0 +1,58 @@
+:root {
+  --c1: #d8f3dc;
+  --c2: #b7e4c7;
+  --c3: #95d5b2;
+  --c4: #74c69d;
+  --c5: #52b788;
+  --c6: #40916c;
+  --c7: #2d6a4f;
+  --c8: #1b4332;
+  --c9: #081c15;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background-color: var(--c7);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: stretch;
+}
+
+#heading_div {
+  flex: 1;
+  height: 100%;
+  background-color: var(--c8);
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  border-left: 2px solid #000;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+}
+
+#body_div {
+  display: flex;
+  margin: 0.3%;
+  gap: 0.3%;
+  flex: 9;
+  background-color: var(--c7);
+}
+
+
+#footer_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin: 0.3%;
+  gap: 0.3%;
+  flex: 1;
+}
+

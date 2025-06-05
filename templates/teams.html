@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/index.css') }}
+"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/tables.css') }}
+"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/tables_inputs.css') }}
+"
+    />
+    <title>Équipes</title>
+  </head>
+  <body>
+    <div id="heading_div">
+      <h1>Équipes</h1>
+    </div>
+    <div id="body_div">
+      <table>
+        <tr>
+          <th>Nom</th>
+          <th>Portion</th>
+          <th>Temps de jeu</th>
+          <th>Priorité</th>
+          <th>Type de terrain</th>
+          <th>Paramètres</th>
+        </tr>
+        <tr>
+          <td>Sixers</td>
+          <td>Demi terrain</td>
+          <td>7</td>
+          <td>3</td>
+          <td>Synthétique</td>
+          <td>
+            <a href="#" onclick="openPopup(); return false;">Click here</a>
+          </td>
+        </tr>
+        <tr>
+          <td>The High Five</td>
+          <td>Terrain entier</td>
+          <td>10</td>
+          <td>2</td>
+          <td>Naturel</td>
+          <td>
+            <a href="#" onclick="openPopup(); return false;">Click here</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Gregarious Games</td>
+          <td>Terrain entier</td>
+          <td>15</td>
+          <td>2</td>
+          <td>Naturel</td>
+          <td>
+            <a href="#" onclick="openPopup(); return false;">Click here</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div id="footer_div">
+      <input type="text" name="fname" />
+      <select name="portions">
+        <option value="whole">Terrain entier</option>
+        <option value="half">Demi terrain</option>
+        <option value="quarter">Quart de terrain</option>
+      </select>
+      <div class="numbers_entry_div">
+        <button class="minus_button" type="button">-</button>
+        <input type="text" value="0" readonly />
+        <button class="plus_button" type="button">+</button>
+      </div>
+      <div class="numbers_entry_div">
+        <button class="minus_button" type="button">-</button>
+        <input type="text" value="0" readonly />
+        <button class="plus_button" type="button">+</button>
+      </div>
+      <select name="portions">
+        <option value="natural">Terrain en herbe</option>
+        <option value="synthetic">Terrain synthétique</option>
+      </select>
+      <input type="submit" value="Submit" />
+    </div>
+
+    <script>
+      function openPopup() {
+        window.open(
+          "/toggable_calendar", // URL of the popup
+          "PopupWindow", // Window name
+          "width=400,height=300,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no",
+        );
+      }
+    </script>
+  </body>
+</html>

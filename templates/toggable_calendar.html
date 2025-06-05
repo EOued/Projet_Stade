@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/calendar.css') }}
+"
+    />
+  </head>
+  <body>
+    <div class="day" draggable="false"></div>
+    <div class="day" draggable="false">Lundi</div>
+    <div class="day" draggable="false">Mardi</div>
+    <div class="day" draggable="false">Mercredi</div>
+    <div class="day" draggable="false">Jeudi</div>
+    <div class="day" draggable="false">Vendredi</div>
+    <div class="day" draggable="false">Samedi</div>
+    <div class="day" draggable="false">Dimanche</div>
+
+    <div class="hour" draggable="false" style="grid-row: 3 / span 2">0h</div>
+    <div class="hour" draggable="false" style="grid-row: 5 / span 2">1h</div>
+    <div class="hour" draggable="false" style="grid-row: 7 / span 2">2h</div>
+    <div class="hour" draggable="false" style="grid-row: 9 / span 2">3h</div>
+    <div class="hour" draggable="false" style="grid-row: 11 / span 2">4h</div>
+    <div class="hour" draggable="false" style="grid-row: 13 / span 2">5h</div>
+    <div class="hour" draggable="false" style="grid-row: 15 / span 2">6h</div>
+    <div class="hour" draggable="false" style="grid-row: 17 / span 2">7h</div>
+    <div class="hour" draggable="false" style="grid-row: 19 / span 2">8h</div>
+    <div class="hour" draggable="false" style="grid-row: 21 / span 2">9h</div>
+    <div class="hour" draggable="false" style="grid-row: 23 / span 2">10h</div>
+    <div class="hour" draggable="false" style="grid-row: 25 / span 2">11h</div>
+    <div class="hour" draggable="false" style="grid-row: 27 / span 2">12h</div>
+    <div class="hour" draggable="false" style="grid-row: 29 / span 2">13h</div>
+    <div class="hour" draggable="false" style="grid-row: 31 / span 2">14h</div>
+    <div class="hour" draggable="false" style="grid-row: 33 / span 2">15h</div>
+    <div class="hour" draggable="false" style="grid-row: 35 / span 2">16h</div>
+    <div class="hour" draggable="false" style="grid-row: 37 / span 2">17h</div>
+    <div class="hour" draggable="false" style="grid-row: 39 / span 2">18h</div>
+    <div class="hour" draggable="false" style="grid-row: 41 / span 2">19h</div>
+    <div class="hour" draggable="false" style="grid-row: 43 / span 2">20h</div>
+    <div class="hour" draggable="false" style="grid-row: 45 / span 2">21h</div>
+    <div class="hour" draggable="false" style="grid-row: 47 / span 2">22h</div>
+    <div class="hour" draggable="false" style="grid-row: 49 / span 2">23h</div>
+
+    <div
+      style="
+        background-color: var(--c7);
+        grid-column: span 7;
+        border: 1px solid;
+      "
+      draggable="false"
+    ></div>
+
+    <div class="filler mon 0" draggable="false"></div>
+    <div class="filler tue 0" draggable="false"></div>
+    <div class="filler wed 0" draggable="false"></div>
+    <div class="filler thu 0" draggable="false"></div>
+    <div class="filler fri 0" draggable="false"></div>
+    <div class="filler sat 0" draggable="false"></div>
+    <div class="filler sun 0" draggable="false"></div>
+
+    <div class="filler mon 1" draggable="false"></div>
+    <div class="filler tue 1" draggable="false"></div>
+    <div class="filler wed 1" draggable="false"></div>
+    <div class="filler thu 1" draggable="false"></div>
+    <div class="filler fri 1" draggable="false"></div>
+    <div class="filler sat 1" draggable="false"></div>
+    <div class="filler sun 1" draggable="false"></div>
+
+    <div class="filler mon 2" draggable="false"></div>
+    <div class="filler tue 2" draggable="false"></div>
+    <div class="filler wed 2" draggable="false"></div>
+    <div class="filler thu 2" draggable="false"></div>
+    <div class="filler fri 2" draggable="false"></div>
+    <div class="filler sat 2" draggable="false"></div>
+    <div class="filler sun 2" draggable="false"></div>
+
+    <div class="filler mon 3" draggable="false"></div>
+    <div class="filler tue 3" draggable="false"></div>
+    <div class="filler wed 3" draggable="false"></div>
+    <div class="filler thu 3" draggable="false"></div>
+    <div class="filler fri 3" draggable="false"></div>
+    <div class="filler sat 3" draggable="false"></div>
+    <div class="filler sun 3" draggable="false"></div>
+
+    <div class="filler mon 4" draggable="false"></div>
+    <div class="filler tue 4" draggable="false"></div>
+    <div class="filler wed 4" draggable="false"></div>
+    <div class="filler thu 4" draggable="false"></div>
+    <div class="filler fri 4" draggable="false"></div>
+    <div class="filler sat 4" draggable="false"></div>
+    <div class="filler sun 4" draggable="false"></div>
+
+    <div class="filler mon 5" draggable="false"></div>
+    <div class="filler tue 5" draggable="false"></div>
+    <div class="filler wed 5" draggable="false"></div>
+    <div class="filler thu 5" draggable="false"></div>
+    <div class="filler fri 5" draggable="false"></div>
+    <div class="filler sat 5" draggable="false"></div>
+    <div class="filler sun 5" draggable="false"></div>
+
+    <div class="filler mon 6" draggable="false"></div>
+    <div class="filler tue 6" draggable="false"></div>
+    <div class="filler wed 6" draggable="false"></div>
+    <div class="filler thu 6" draggable="false"></div>
+    <div class="filler fri 6" draggable="false"></div>
+    <div class="filler sat 6" draggable="false"></div>
+    <div class="filler sun 6" draggable="false"></div>
+
+    <div class="filler mon 7" draggable="false"></div>
+    <div class="filler tue 7" draggable="false"></div>
+    <div class="filler wed 7" draggable="false"></div>
+    <div class="filler thu 7" draggable="false"></div>
+    <div class="filler fri 7" draggable="false"></div>
+    <div class="filler sat 7" draggable="false"></div>
+    <div class="filler sun 7" draggable="false"></div>
+
+    <div class="filler mon 8" draggable="false"></div>
+    <div class="filler tue 8" draggable="false"></div>
+    <div class="filler wed 8" draggable="false"></div>
+    <div class="filler thu 8" draggable="false"></div>
+    <div class="filler fri 8" draggable="false"></div>
+    <div class="filler sat 8" draggable="false"></div>
+    <div class="filler sun 8" draggable="false"></div>
+
+    <div class="filler mon 9" draggable="false"></div>
+    <div class="filler tue 9" draggable="false"></div>
+    <div class="filler wed 9" draggable="false"></div>
+    <div class="filler thu 9" draggable="false"></div>
+    <div class="filler fri 9" draggable="false"></div>
+    <div class="filler sat 9" draggable="false"></div>
+    <div class="filler sun 9" draggable="false"></div>
+
+    <div class="filler mon 10" draggable="false"></div>
+    <div class="filler tue 10" draggable="false"></div>
+    <div class="filler wed 10" draggable="false"></div>
+    <div class="filler thu 10" draggable="false"></div>
+    <div class="filler fri 10" draggable="false"></div>
+    <div class="filler sat 10" draggable="false"></div>
+    <div class="filler sun 10" draggable="false"></div>
+
+    <div class="filler mon 11" draggable="false"></div>
+    <div class="filler tue 11" draggable="false"></div>
+    <div class="filler wed 11" draggable="false"></div>
+    <div class="filler thu 11" draggable="false"></div>
+    <div class="filler fri 11" draggable="false"></div>
+    <div class="filler sat 11" draggable="false"></div>
+    <div class="filler sun 11" draggable="false"></div>
+
+    <div class="filler mon 12" draggable="false"></div>
+    <div class="filler tue 12" draggable="false"></div>
+    <div class="filler wed 12" draggable="false"></div>
+    <div class="filler thu 12" draggable="false"></div>
+    <div class="filler fri 12" draggable="false"></div>
+    <div class="filler sat 12" draggable="false"></div>
+    <div class="filler sun 12" draggable="false"></div>
+
+    <div class="filler mon 13" draggable="false"></div>
+    <div class="filler tue 13" draggable="false"></div>
+    <div class="filler wed 13" draggable="false"></div>
+    <div class="filler thu 13" draggable="false"></div>
+    <div class="filler fri 13" draggable="false"></div>
+    <div class="filler sat 13" draggable="false"></div>
+    <div class="filler sun 13" draggable="false"></div>
+
+    <div class="filler mon 14" draggable="false"></div>
+    <div class="filler tue 14" draggable="false"></div>
+    <div class="filler wed 14" draggable="false"></div>
+    <div class="filler thu 14" draggable="false"></div>
+    <div class="filler fri 14" draggable="false"></div>
+    <div class="filler sat 14" draggable="false"></div>
+    <div class="filler sun 14" draggable="false"></div>
+
+    <div class="filler mon 15" draggable="false"></div>
+    <div class="filler tue 15" draggable="false"></div>
+    <div class="filler wed 15" draggable="false"></div>
+    <div class="filler thu 15" draggable="false"></div>
+    <div class="filler fri 15" draggable="false"></div>
+    <div class="filler sat 15" draggable="false"></div>
+    <div class="filler sun 15" draggable="false"></div>
+
+    <div class="filler mon 16" draggable="false"></div>
+    <div class="filler tue 16" draggable="false"></div>
+    <div class="filler wed 16" draggable="false"></div>
+    <div class="filler thu 16" draggable="false"></div>
+    <div class="filler fri 16" draggable="false"></div>
+    <div class="filler sat 16" draggable="false"></div>
+    <div class="filler sun 16" draggable="false"></div>
+
+    <div class="filler mon 17" draggable="false"></div>
+    <div class="filler tue 17" draggable="false"></div>
+    <div class="filler wed 17" draggable="false"></div>
+    <div class="filler thu 17" draggable="false"></div>
+    <div class="filler fri 17" draggable="false"></div>
+    <div class="filler sat 17" draggable="false"></div>
+    <div class="filler sun 17" draggable="false"></div>
+
+    <div class="filler mon 18" draggable="false"></div>
+    <div class="filler tue 18" draggable="false"></div>
+    <div class="filler wed 18" draggable="false"></div>
+    <div class="filler thu 18" draggable="false"></div>
+    <div class="filler fri 18" draggable="false"></div>
+    <div class="filler sat 18" draggable="false"></div>
+    <div class="filler sun 18" draggable="false"></div>
+
+    <div class="filler mon 19" draggable="false"></div>
+    <div class="filler tue 19" draggable="false"></div>
+    <div class="filler wed 19" draggable="false"></div>
+    <div class="filler thu 19" draggable="false"></div>
+    <div class="filler fri 19" draggable="false"></div>
+    <div class="filler sat 19" draggable="false"></div>
+    <div class="filler sun 19" draggable="false"></div>
+
+    <div class="filler mon 20" draggable="false"></div>
+    <div class="filler tue 20" draggable="false"></div>
+    <div class="filler wed 20" draggable="false"></div>
+    <div class="filler thu 20" draggable="false"></div>
+    <div class="filler fri 20" draggable="false"></div>
+    <div class="filler sat 20" draggable="false"></div>
+    <div class="filler sun 20" draggable="false"></div>
+
+    <div class="filler mon 21" draggable="false"></div>
+    <div class="filler tue 21" draggable="false"></div>
+    <div class="filler wed 21" draggable="false"></div>
+    <div class="filler thu 21" draggable="false"></div>
+    <div class="filler fri 21" draggable="false"></div>
+    <div class="filler sat 21" draggable="false"></div>
+    <div class="filler sun 21" draggable="false"></div>
+
+    <div class="filler mon 22" draggable="false"></div>
+    <div class="filler tue 22" draggable="false"></div>
+    <div class="filler wed 22" draggable="false"></div>
+    <div class="filler thu 22" draggable="false"></div>
+    <div class="filler fri 22" draggable="false"></div>
+    <div class="filler sat 22" draggable="false"></div>
+    <div class="filler sun 22" draggable="false"></div>
+
+    <div class="filler mon 23" draggable="false"></div>
+    <div class="filler tue 23" draggable="false"></div>
+    <div class="filler wed 23" draggable="false"></div>
+    <div class="filler thu 23" draggable="false"></div>
+    <div class="filler fri 23" draggable="false"></div>
+    <div class="filler sat 23" draggable="false"></div>
+    <div class="filler sun 23" draggable="false"></div>
+
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/calendar.js') }}"
+    ></script>
+
+    <noscript>Sorry, your browser does not support JavaScript!</noscript>
+  </body>
+</html>

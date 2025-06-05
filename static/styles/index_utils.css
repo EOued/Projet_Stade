@@ -1,0 +1,79 @@
+:root {
+  --c1: #d8f3dc;
+  --c2: #b7e4c7;
+  --c3: #95d5b2;
+  --c4: #74c69d;
+  --c5: #52b788;
+  --c6: #40916c;
+  --c7: #2d6a4f;
+  --c8: #1b4332;
+  --c9: #081c15;
+}
+
+#body_div {
+  flex-direction: column;
+}
+
+#files {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  max-height: 10%;
+  gap: 3px;
+}
+
+#files > div {
+  background-color: var(--c6);
+  flex: 1;
+  border: 2px solid black;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+input,
+select {
+  flex: 1 1;
+  background-color: var(--c5);
+  border: 1px solid;
+  border-radius: 9px;
+  margin-left: 10px;
+}
+
+input:focus {
+  border: 1px solid black;
+  border-radius: 9px;
+  outline: none;
+}
+
+#preview {
+  background-color: var(--c6);
+  flex: 10;
+  border: 3px solid black;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#footer_div > div {
+  background-color: var(--c6);
+  flex: 1;
+  border: 2px solid black;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#footer_div > div:hover {
+  background-color: var(--c5);
+  border: 3px solid black;
+  box-shadow: 1px 1px var(--c8);
+}

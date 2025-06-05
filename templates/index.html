@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/index.css') }}
+"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/index_utils.css') }}
+"
+    />
+    <title>Gestionnaire d'équipe</title>
+  </head>
+  <body>
+    <div id="heading_div">
+      <h1>Gestionnaire d'équipes</h1>
+    </div>
+    <div id="body_div">
+      <div id="files">
+        <div id="file_picker">
+          <label for="myfile">Select a file:</label>
+          <input type="file" id="myfile" name="myfile" accept=".get" />
+        </div>
+        <div id="new">
+          <label>Nouveau:</label>
+          <input type="text" name="fname" />
+        </div>
+      </div>
+      <div id="preview"></div>
+    </div>
+    <div id="footer_div">
+      <div id="teams_div">Équipe</div>
+      <div id="fields_div">Terrains</div>
+      <div id="settings_div">Paramètres</div>
+      <div id="fit_div">Lancer</div>
+    </div>
+  </body>
+  <script
+    type="text/javascript"
+    src="{{ url_for('static', filename='js/index.js') }}"
+  ></script>
+  <noscript>Sorry, your browser does not support JavaScript!</noscript>
+</html>

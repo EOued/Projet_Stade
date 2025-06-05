@@ -15,7 +15,7 @@ team_excluded_periods = {
 
 @app.route("/")
 def run():
-    return render_template("teams.html")
+    return render_template("index.html")
 
 
 @app.route("/toggable_calendar")
@@ -24,14 +24,14 @@ def display_tep():
 
 
 @app.route("/cal-submit-data", methods=["POST"])
-def handle_post():
+def calendar_submit():
     if request.method == "POST":
         day = request.get_json()['day']
         team_excluded_periods[day] ^= 1 << int(request.get_json()['hour'])
     return render_template("toggable_calendar.html")
 
 @app.route('/cal-data-call')
-def data():
+def calendar_data():
     data = []
     for day, mask in team_excluded_periods.items():
         i = 0
@@ -43,6 +43,10 @@ def data():
     return data
 
 
+
+@app.route("/teams")
+def display_t():
+    return render_template("teams.html")
 
 @app.route("/fields")
 def display_k():

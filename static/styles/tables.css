@@ -1,0 +1,26 @@
+:root {
+  --c1: #d8f3dc;
+  --c2: #b7e4c7;
+  --c3: #95d5b2;
+  --c4: #74c69d;
+  --c5: #52b788;
+  --c6: #40916c;
+  --c7: #2d6a4f;
+  --c8: #1b4332;
+  --c9: #081c15;
+}
+
+table,
+td,
+th {
+  flex: 1;
+  border: 1px solid;
+}
+td {
+  background-color: var(--c6);
+}
+th {
+  background-color: var(--c8);
+  border: 2px solid;
+}
+

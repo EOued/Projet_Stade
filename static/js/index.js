@@ -1,0 +1,22 @@
+const teams_div = document.getElementById("teams_div");
+const fields_div = document.getElementById("fields_div");
+const settings_div = document.getElementById("settings_div");
+const fit_div = document.getElementById("fit_div");
+
+const box = document.getElementById("preview");
+
+teams_div.addEventListener("click", () => {
+  console.log("UWU");
+  box.innerHTML =
+    '<object width="100%" height="100%" type="text/html" data="/teams"</object>';
+});
+
+fields_div.addEventListener("click", () => {
+  box.innerHTML =
+    '<object width="100%" height="100%" type="text/html" data="/fields"</object>';
+});
+
+settings_div.addEventListener("click", () => {
+  box.innerHTML =
+    '<object width="100%" height="100%" type="text/html" data="/settings"</object>';
+});
