@@ -74,3 +74,10 @@ save_file.addEventListener("click", () => {
       console.log("Error:", error);
     });
 });
+
+const channel = new BroadcastChannel("channel");
+channel.onmessage = (event) => {
+  console.log("Received", event.data);
+  box.innerHTML =
+    '<object width="100%" height="100%" type="text/html" data="/toggable_calendar"</object>';
+};

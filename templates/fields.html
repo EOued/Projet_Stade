@@ -24,7 +24,7 @@
       <h1>Équipes</h1>
     </div>
     <div id="body_div">
-      <table>
+      <table id="table">
         <tr>
           <th>Nom/Identifiant</th>
           <th>Périodes</th>
@@ -33,29 +33,54 @@
         <tr>
           <td>Terrain 1</td>
           <td>
-            <a href="#" onclick="openPopup(); return false;">Click here</a>
+            <a href="#" onclick="openPopup(this); return false;">Click here</a>
           </td>
           <td>Terrain entier</td>
         </tr>
       </table>
     </div>
     <div id="footer_div">
-      <input type="text" name="fname" />
-      <select name="portions">
-        <option value="whole">Terrain entier</option>
-        <option value="half">Demi terrain</option>
-        <option value="quarter">Quart de terrain</option>
+      <input type="text" id="field_id" />
+      <select name="portions" id="field_portion">
+        <option value="Terrain entier">Terrain entier</option>
+        <option value="Demi terrain">Demi terrain</option>
+        <option value="Quart de terrain">Quart de terrain</option>
       </select>
-      <input type="submit" value="Submit" />
+      <button onclick="insert()">Insérer</button>
     </div>
 
     <script>
-      function openPopup() {
-        window.open(
-          "/toggable_calendar", // URL of the popup
-          "PopupWindow", // Window name
-          "width=400,height=300,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no",
-        );
+      const channel = new BroadcastChannel("channel");
+      function openPopup(element) {
+        channel.postMessage(element.closest("tr").cells[0].textContent.trim());
+      }
+
+      function insert() {
+        var id = document.getElementById("field_id").value.trim();
+        var portion = document.getElementById("field_portion").value;
+
+        if (id == "") {
+          alert("Impossible d'avoir une ID de terrain vide.");
+          return;
+        }
+
+        var table = document.getElementById("table");
+        var stop = false;
+        Array.from(table.rows).forEach((row) => {
+          if (row.cells[0].textContent.trim() == id) {
+            alert(`L'ID "${id}" existe déjà, et chaque ID doit être unique.`);
+            stop = true;
+            return;
+          }
+        });
+        if (stop) return;
+
+        var newRow = table.insertRow();
+
+        newRow.insertCell(0).textContent = id;
+        newRow.insertCell(1).innerHTML =
+          '<a href="#" onclick="openPopup(this); return false;">Click here</a>';
+        newRow.insertCell(2).textContent = portion;
       }
     </script>
   </body>

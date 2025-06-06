@@ -19,21 +19,40 @@ select {
   min-width: 0;
 }
 
-.numbers_entry_div button {
+button {
   flex: 1 1 0;
+  border: 1px solid;
+  border-radius: 9px;
+  background-color: var(--c5);
+}
+
+button:hover {
+  background-color: var(--c6);
+}
+
+.numbers_entry_div button {
   border: 0px;
   border-top: 1px solid;
   border-bottom: 1px solid;
+}
+
+.numbers_entry_div button:active {
+  flex: 1 1 0;
+  border: 1px solid;
 }
 
 #footer_div .numbers_entry_div .minus_button {
   border-left: 1px solid;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
 
 #footer_div .numbers_entry_div .plus_button {
   border-right: 1px solid;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
 }

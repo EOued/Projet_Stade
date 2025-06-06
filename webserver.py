@@ -5,15 +5,7 @@ import zlib
 
 app = Flask(__name__)
 
-team_excluded_periods = {
-    "mon": 0,
-    "tue": 0,
-    "wed": 0,
-    "thu": 0,
-    "fri": 0,
-    "sat": 0,
-    "sun": 0,
-}
+data = {"teams": {}, "fields": {}}
 
 
 @app.route("/")
@@ -74,7 +66,7 @@ def decode():
 @app.route("/content_encoding")
 def encode():
     json_str = json.dumps(team_excluded_periods)
-    print("uwu",json_str)
+    print("uwu", json_str)
     compressed = zlib.compress(json_str.encode("utf-8"))
     encoded = base64.b64encode(compressed).decode("utf-8")
     print(encoded)
