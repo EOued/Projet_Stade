@@ -17,10 +17,37 @@ th {
   border: 1px solid;
 }
 td {
+  height: 100px;
   background-color: var(--c6);
+  border: 1px solid;
 }
 th {
   background-color: var(--c8);
   border: 2px solid;
 }
 
+tr.row_selected * {
+  background-color: var(--c7);
+}
+
+tr:not(.row_selected) button {
+  opacity: 0;
+}
+
+tr:not(.row_selected) select {
+  appearance: none;
+}
+
+#entry * {
+  background-color: var(--c4);
+}
+
+#entry select {
+    appearance: auto;
+}
+
+#entry button,
+tr.row_selected button {
+  opacity: 1;
+  background-color: var(--c3);
+}

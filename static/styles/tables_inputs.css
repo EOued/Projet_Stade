@@ -1,71 +1,34 @@
-#footer_div input,
+td input,
 select {
-  flex: 1 1;
-  background-color: var(--c5);
-  border: 1px solid;
-  border-radius: 9px;
+  background-color: var(--c6);
+  height: 100%;
+  width: 96%;
+  border: 0px;
+  outline: none;
+  display: flex;
+  text-align: center;
 }
 
-#footer_div input:focus {
-  border: 1px solid black;
-  border-radius: 9px;
-  outline: none;
+button {
+  flex: 1 1 0;
+  border: 1px solid;
+  background-color: var(--c5);
+  height: 100%;
+  margin-bottom: 0;
+}
+
+button:hover:enabled {
+  background-color: var(--c6);
 }
 
 .numbers_entry_div {
   display: flex;
   flex-direction: row;
   flex: 1 1 0;
-  min-width: 0;
-}
-
-button {
-  flex: 1 1 0;
-  border: 1px solid;
-  border-radius: 9px;
-  background-color: var(--c5);
-}
-
-button:hover {
-  background-color: var(--c6);
-}
-
-.numbers_entry_div button {
-  border: 0px;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
+  height: 100%;
 }
 
 .numbers_entry_div button:active {
   flex: 1 1 0;
   border: 1px solid;
-}
-
-#footer_div .numbers_entry_div .minus_button {
-  border-left: 1px solid;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-}
-
-#footer_div .numbers_entry_div .plus_button {
-  border-right: 1px solid;
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-#footer_div .numbers_entry_div input {
-  flex: 9 1 0;
-  border: 0px;
-  border-radius: 0px;
-  border-top: 1px solid;
-  border-bottom: 1px solid;
-}
-
-.numbers_entry_div > * {
-  background-color: var(--c5);
-  min-width: 0;
 }

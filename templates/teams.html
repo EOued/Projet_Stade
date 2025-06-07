@@ -19,9 +19,6 @@
     <title>Équipes</title>
   </head>
   <body>
-    <div id="heading_div">
-      <h1>Équipes</h1>
-    </div>
     <div id="body_div">
       <table id="table">
         <tr>
@@ -32,165 +29,77 @@
           <th>Type de terrain</th>
           <th>Paramètres</th>
         </tr>
-        <tr>
-          <td>Sixers</td>
-          <td>Demi terrain</td>
-          <td>7</td>
-          <td>3</td>
-          <td>Synthétique</td>
+        <tr id="entry">
           <td>
-            <a href="#" onclick="openPopup(this); return false;">Click here</a>
+            <input class="id" placeholder="Team name" />
           </td>
-        </tr>
-        <tr>
-          <td>The High Five</td>
-          <td>Terrain entier</td>
-          <td>10</td>
-          <td>2</td>
-          <td>Naturel</td>
           <td>
-            <a href="#" onclick="openPopup(this); return false;">Click here</a>
+            <select class="field_portion">
+              <option value="Terrain entier">Terrain entier</option>
+              <option value="Demi terrain">Demi terrain</option>
+              <option value="Quart de terrain">Quart de terrain</option>
+            </select>
           </td>
-        </tr>
-        <tr>
-          <td>Gregarious Games</td>
-          <td>Terrain entier</td>
-          <td>15</td>
-          <td>2</td>
-          <td>Naturel</td>
           <td>
-            <a href="#" onclick="openPopup(this); return false;">Click here</a>
+            <div class="numbers_entry_div gametime" data-min="0" data-max="24">
+              <button
+                class="button minus_button"
+                onmousedown="startHold(this, minus)"
+                onmouseup="stopHold()"
+                onmouseleave="stopHold()"
+              >
+                -
+              </button>
+              <input type="text" value="0" class="input" readonly />
+              <button
+                class="button plus_button"
+                onmousedown="startHold(this, plus)"
+                onmouseup="stopHold()"
+                onmouseleave="stopHold()"
+              >
+                +
+              </button>
+            </div>
           </td>
+
+          <td>
+            <div class="numbers_entry_div priority" data-min="0" data-max="100">
+              <button
+                class="button minus_button"
+                onmousedown="startHold(this, minus)"
+                onmouseup="stopHold()"
+                onmouseleave="stopHold()"
+              >
+                -
+              </button>
+              <input type="text" value="0" class="input" readonly />
+              <button
+                class="button plus_button"
+                onmousedown="startHold(this, plus)"
+                onmouseup="stopHold()"
+                onmouseleave="stopHold()"
+              >
+                +
+              </button>
+            </div>
+          </td>
+          <td>
+            <select class="field_type">
+              <option value="Terrain en herbe">Terrain en herbe</option>
+              <option value="Terrain synthétique">Terrain synthétique</option>
+            </select>
+          </td>
+          <td></td>
         </tr>
       </table>
     </div>
-    <div id="footer_div">
-      <input id="team_name" />
-
-      <select id="field_portion">
-        <option value="Terrain entier">Terrain entier</option>
-        <option value="Demi terrain">Demi terrain</option>
-        <option value="Quart de terrain">Quart de terrain</option>
-      </select>
-
-      <div class="numbers_entry_div" data-min="0" data-max="23">
-        <button
-          class="minus_button"
-          onmousedown="startHold(this, minus)"
-          onmouseup="stopHold()"
-          onmouseleave="stopHold()"
-        >
-          -
-        </button>
-        <input type="text" value="0" id="gametime" readonly />
-        <button
-          class="plus_button"
-          onmousedown="startHold(this, plus)"
-          onmouseup="stopHold()"
-          onmouseleave="stopHold()"
-        >
-          +
-        </button>
-      </div>
-
-      <div class="numbers_entry_div" data-min="0" data-max="100">
-        <button
-          class="minus_button"
-          onmousedown="startHold(this, minus)"
-          onmouseup="stopHold()"
-          onmouseleave="stopHold()"
-        >
-          -
-        </button>
-        <input type="text" value="0" id="priority" readonly />
-        <button
-          class="plus_button"
-          onmousedown="startHold(this, plus)"
-          onmouseup="stopHold()"
-          onmouseleave="stopHold()"
-        >
-          +
-        </button>
-      </div>
-      <select id="field_type">
-        <option value="Terrain en herbe">Terrain en herbe</option>
-        <option value="Terrain synthétique">Terrain synthétique</option>
-      </select>
-      <button onclick="insert()">Submit</button>
-    </div>
-
-    <script>
-      const channel = new BroadcastChannel("channel");
-      function openPopup(element) {
-        channel.postMessage(element.closest("tr").cells[0].textContent.trim());
-      }
-
-      let holdInterval;
-
-      function startHold(button, callback) {
-        callback(button);
-        holdInterval = setInterval(() => callback(button), 150);
-      }
-
-      function stopHold() {
-        clearInterval(holdInterval);
-      }
-
-      function minus(button) {
-        const parent = button.parentElement;
-        const input = parent.querySelector("input");
-        const min = Number(parent.dataset.min) || 0;
-        let value = Number(input.value);
-
-        if (value > min) {
-          input.value = --value;
-        }
-      }
-
-      function plus(button) {
-        const parent = button.parentElement;
-        const input = parent.querySelector("input");
-        const max = Number(parent.dataset.max);
-        let value = Number(input.value);
-
-        if (!max || value < max) {
-          input.value = ++value;
-        }
-      }
-
-      function insert() {
-        var id = document.getElementById("team_name").value.trim();
-        var portion = document.getElementById("field_portion").value;
-        var gametime = document.getElementById("gametime").value;
-        var priority = document.getElementById("priority").value;
-        var field_type = document.getElementById("field_type").value;
-
-        if (id == "") {
-          alert("Impossible d'avoir un nom d'équipe vide.");
-          return;
-        }
-
-        var table = document.getElementById("table");
-        var stop = false;
-        Array.from(table.rows).forEach((row) => {
-          if (row.cells[0].textContent.trim() == id) {
-            alert(`L'équipe "${id}" existe déjà, et chaque nom d'équipe doit être unique.`);
-            stop = true;
-            return;
-          }
-        });
-        if (stop) return;
-
-        var newRow = table.insertRow();
-
-        newRow.insertCell(0).textContent = id;
-        newRow.insertCell(1).textContent = portion;
-        newRow.insertCell(2).textContent = gametime;
-        newRow.insertCell(3).textContent = priority;
-        newRow.insertCell(4).textContent = field_type;
-        newRow.insertCell(5).innerHTML =
-          '<a href="#" onclick="openPopup(this); return false;">Click here</a>';
-      }
-    </script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/teams.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/tables.js') }}"
+    ></script>
   </body>
 </html>
