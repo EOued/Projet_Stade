@@ -3,11 +3,6 @@
   <head>
     <link
       rel="stylesheet"
-      href="{{ url_for('static',filename='styles/index.css') }}
-"
-    />
-    <link
-      rel="stylesheet"
       href="{{ url_for('static',filename='styles/tables.css') }}
 "
     />
@@ -20,68 +15,33 @@
   </head>
 
   <body>
-    <div id="heading_div">
-      <h1>Équipes</h1>
-    </div>
-    <div id="body_div">
-      <table id="table">
-        <tr>
-          <th>Nom/Identifiant</th>
-          <th>Périodes</th>
-          <th>Portion</th>
-        </tr>
-        <tr>
-          <td>Terrain 1</td>
-          <td>
-            <a href="#" onclick="openPopup(this); return false;">Click here</a>
-          </td>
-          <td>Terrain entier</td>
-        </tr>
-      </table>
-    </div>
-    <div id="footer_div">
-      <input type="text" id="field_id" />
-      <select name="portions" id="field_portion">
-        <option value="Terrain entier">Terrain entier</option>
-        <option value="Demi terrain">Demi terrain</option>
-        <option value="Quart de terrain">Quart de terrain</option>
-      </select>
-      <button onclick="insert()">Insérer</button>
-    </div>
-
-    <script>
-      const channel = new BroadcastChannel("channel");
-      function openPopup(element) {
-        channel.postMessage(element.closest("tr").cells[0].textContent.trim());
-      }
-
-      function insert() {
-        var id = document.getElementById("field_id").value.trim();
-        var portion = document.getElementById("field_portion").value;
-
-        if (id == "") {
-          alert("Impossible d'avoir une ID de terrain vide.");
-          return;
-        }
-
-        var table = document.getElementById("table");
-        var stop = false;
-        Array.from(table.rows).forEach((row) => {
-          if (row.cells[0].textContent.trim() == id) {
-            alert(`L'ID "${id}" existe déjà, et chaque ID doit être unique.`);
-            stop = true;
-            return;
-          }
-        });
-        if (stop) return;
-
-        var newRow = table.insertRow();
-
-        newRow.insertCell(0).textContent = id;
-        newRow.insertCell(1).innerHTML =
-          '<a href="#" onclick="openPopup(this); return false;">Click here</a>';
-        newRow.insertCell(2).textContent = portion;
-      }
-    </script>
+    <table id="table">
+      <tr>
+        <th>Nom/Identifiant</th>
+        <th>Portion</th>
+        <th>Périodes</th>
+      </tr>
+      <tr id="entry">
+        <td>
+          <input type="text" class="field_id" />
+        </td>
+        <td>
+          <select name="portions" class="field_portion">
+            <option value="Terrain entier">Terrain entier</option>
+            <option value="Demi terrain">Demi terrain</option>
+            <option value="Quart de terrain">Quart de terrain</option>
+          </select>
+        </td>
+        <td></td>
+      </tr>
+    </table>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/tables.js') }}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/fields.js') }}"
+    ></script>
   </body>
 </html>

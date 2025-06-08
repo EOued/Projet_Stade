@@ -3,11 +3,6 @@
   <head>
     <link
       rel="stylesheet"
-      href="{{ url_for('static',filename='styles/index.css') }}
-"
-    />
-    <link
-      rel="stylesheet"
       href="{{ url_for('static',filename='styles/tables.css') }}
 "
     />
@@ -19,80 +14,78 @@
     <title>Équipes</title>
   </head>
   <body>
-    <div id="body_div">
-      <table id="table">
-        <tr>
-          <th>Nom</th>
-          <th>Portion</th>
-          <th>Temps de jeu</th>
-          <th>Priorité</th>
-          <th>Type de terrain</th>
-          <th>Paramètres</th>
-        </tr>
-        <tr id="entry">
-          <td>
-            <input class="id" placeholder="Team name" />
-          </td>
-          <td>
-            <select class="field_portion">
-              <option value="Terrain entier">Terrain entier</option>
-              <option value="Demi terrain">Demi terrain</option>
-              <option value="Quart de terrain">Quart de terrain</option>
-            </select>
-          </td>
-          <td>
-            <div class="numbers_entry_div gametime" data-min="0" data-max="24">
-              <button
-                class="button minus_button"
-                onmousedown="startHold(this, minus)"
-                onmouseup="stopHold()"
-                onmouseleave="stopHold()"
-              >
-                -
-              </button>
-              <input type="text" value="0" class="input" readonly />
-              <button
-                class="button plus_button"
-                onmousedown="startHold(this, plus)"
-                onmouseup="stopHold()"
-                onmouseleave="stopHold()"
-              >
-                +
-              </button>
-            </div>
-          </td>
+    <table id="table">
+      <tr>
+        <th>Nom</th>
+        <th>Portion</th>
+        <th>Temps de jeu</th>
+        <th>Priorité</th>
+        <th>Type de terrain</th>
+        <th>Paramètres</th>
+      </tr>
+      <tr id="entry">
+        <td>
+          <input class="id" placeholder="Team name" />
+        </td>
+        <td>
+          <select class="field_portion">
+            <option value="Terrain entier">Terrain entier</option>
+            <option value="Demi terrain">Demi terrain</option>
+            <option value="Quart de terrain">Quart de terrain</option>
+          </select>
+        </td>
+        <td>
+          <div class="numbers_entry_div gametime" data-min="0" data-max="24">
+            <button
+              class="button minus_button"
+              onmousedown="startHold(this, minus)"
+              onmouseup="stopHold()"
+              onmouseleave="stopHold()"
+            >
+              -
+            </button>
+            <input type="text" value="0" class="input" readonly />
+            <button
+              class="button plus_button"
+              onmousedown="startHold(this, plus)"
+              onmouseup="stopHold()"
+              onmouseleave="stopHold()"
+            >
+              +
+            </button>
+          </div>
+        </td>
 
-          <td>
-            <div class="numbers_entry_div priority" data-min="0" data-max="100">
-              <button
-                class="button minus_button"
-                onmousedown="startHold(this, minus)"
-                onmouseup="stopHold()"
-                onmouseleave="stopHold()"
-              >
-                -
-              </button>
-              <input type="text" value="0" class="input" readonly />
-              <button
-                class="button plus_button"
-                onmousedown="startHold(this, plus)"
-                onmouseup="stopHold()"
-                onmouseleave="stopHold()"
-              >
-                +
-              </button>
-            </div>
-          </td>
-          <td>
-            <select class="field_type">
-              <option value="Terrain en herbe">Terrain en herbe</option>
-              <option value="Terrain synthétique">Terrain synthétique</option>
-            </select>
-          </td>
-          <td></td>
-        </tr>
-      </table>
-    </div>
+        <td>
+          <div class="numbers_entry_div priority" data-min="0" data-max="100">
+            <button
+              class="button minus_button"
+              onmousedown="startHold(this, minus)"
+              onmouseup="stopHold()"
+              onmouseleave="stopHold()"
+            >
+              -
+            </button>
+            <input type="text" value="0" class="input" readonly />
+            <button
+              class="button plus_button"
+              onmousedown="startHold(this, plus)"
+              onmouseup="stopHold()"
+              onmouseleave="stopHold()"
+            >
+              +
+            </button>
+          </div>
+        </td>
+        <td>
+          <select class="field_type">
+            <option value="Terrain en herbe">Terrain en herbe</option>
+            <option value="Terrain synthétique">Terrain synthétique</option>
+          </select>
+        </td>
+        <td></td>
+      </tr>
+    </table>
     <script
       type="text/javascript"
       src="{{ url_for('static', filename='js/tables.js') }}"
