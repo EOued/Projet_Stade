@@ -77,7 +77,16 @@ save_file.addEventListener("click", () => {
 
 const channel = new BroadcastChannel("channel");
 channel.onmessage = (event) => {
-  console.log("Received", event.data);
-  box.innerHTML =
-    '<object width="100%" height="100%" type="text/html" data="/toggable_calendar"</object>';
+  switch (event.data) {
+    case "forbid-launch":
+      document.getElementById("fit_div").classList.add("disabled");
+      return;
+    case "allow-launch":
+      document.getElementById("fit_div").classList.remove("disabled");
+      return;
+    default:
+      box.innerHTML =
+        '<object width="100%" height="100%" type="text/html" data="/toggable_calendar"</object>';
+      return;
+  }
 };
