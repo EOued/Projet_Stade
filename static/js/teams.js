@@ -30,11 +30,9 @@ document.addEventListener("keydown", (event) => {
         return;
       }
       if (!is_row_selected()) insert();
-      else {
-        // Element clicked is name input of row that is not entry
-        if (emptyName()) sendForbidLaunch();
-        else sendAllowLaunch();
-      }
+      if (emptyName()) sendForbidLaunch();
+      else sendAllowLaunch();
+      
       activeElement.blur();
       return;
     case "Escape":

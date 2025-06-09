@@ -29,11 +29,10 @@ document.addEventListener("keydown", (event) => {
         return;
       }
       if (!is_row_selected()) insert();
-      else {
         // Element clicked is name input of row that is not entry
-        if (emptyName()) sendForbidLaunch();
+        if (invalidName()) sendForbidLaunch();
         else sendAllowLaunch();
-      }
+      
       activeElement.blur();
       return;
     case "Escape":
@@ -47,12 +46,33 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function emptyName() {
-  const exists = Array.from(table.rows).some((row) => {
-    if (row.querySelector(".field_id") && row.id != "entry")
-      return row.querySelector(".field_id").value.trim() == "";
+function invalidName() {
+  const values = [];
+  let hasEmpty = false;
+  let hasDuplicate = false;
+
+  Array.from(table.rows).forEach((row) => {
+    if (row.id === "entry") return;
+
+    const field = row.querySelector(".field_id");
+    if (!field) return;
+
+    const value = field.value.trim();
+    if (value == "") {
+      hasEmpty = true;
+      return;
+    }
+    else {
+      if (values.includes(value))
+      {
+	  hasDuplicate = true;
+	  return;
+    } else {
+      values.push(value);
+    }
+    }
   });
-  return exists;
+  return hasEmpty || hasDuplicate;
 }
 
 function insert() {
@@ -81,7 +101,7 @@ function insert() {
 
   clone.addEventListener("click", row_selection);
   clone.querySelector(".field_id").addEventListener("blur", () => {
-    if (emptyName()) sendForbidLaunch();
+    if (invalidName()) sendForbidLaunch();
     else sendAllowLaunch();
   });
 
