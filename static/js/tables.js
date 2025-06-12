@@ -54,6 +54,30 @@ function sendAllowLaunch() {
   channel.postMessage("allow-launch");
 }
 
-function openPopup(element) {
-  channel.postMessage(element.closest("tr").cells[0].textContent.trim());
+function toArray(row) {
+  return Array.from(row.querySelectorAll("td"), (cell) => cell.children[0])
+    .filter((element) => element.classList.length > 0)
+    .map((element) =>
+      element.tagName == "DIV"
+        ? element.querySelector("input").value.trim()
+        : element.value.trim(),
+    );
+}
+
+function openPopup(type, key, ids) {
+  for (const [key, value] of Object.entries(ids)) {
+    ids[key] = toArray(value);
+  }
+
+  console.log(ids);
+  fetch("/tables-send-data", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      type: type,
+      data: ids,
+    }),
+  });
+
+  channel.postMessage(`${type} ${key}`);
 }

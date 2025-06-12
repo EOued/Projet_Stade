@@ -5,12 +5,36 @@ import zlib
 
 app = Flask(__name__)
 
-data = {"teams": {}, "fields": {}}
+data = {"teams": {
+"""
+format:
+"id": {
+"values":["name", portion(int), gametime(int), priority(int), field_type(int)]   
+"excluded_days:[mon, tue, wes, thu, fri, sat, sun]
+}
+"""
+}, "fields": {
+"""
+format:
+"id": {
+    "type": 0,
+    "periods": [249600, 3840, 1036032, 0, 1036032, 1036224, 0]
+}
+"""
 
+}}
+
+tep_team = ""
+fp_field = ""
 
 @app.route("/")
 def run():
     return render_template("index.html")
+
+@app.route("/tables-send-data", methods=["POST"])
+def tables_submit():
+    print(request.get_json())
+    return ""
 
 
 @app.route("/toggable_calendar")
@@ -20,9 +44,12 @@ def display_tep():
 
 @app.route("/cal-submit-data", methods=["POST"])
 def calendar_submit():
-    if request.method == "POST":
-        day = request.get_json()["day"]
-        team_excluded_periods[day] ^= 1 << int(request.get_json()["hour"])
+    # if request.method == "POST":
+    #     day = request.get_json()["day"]
+    #     isTeam = request.get_json()["isTeam"]
+    #     mkey = "teams" if isTeam else "fields"
+    #     key = tep_team if isTeam else fp_field
+    #     data[mkey][key][day] ^= 1 << int(request.get_json()["hour"])
     return render_template("toggable_calendar.html")
 
 

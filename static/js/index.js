@@ -77,6 +77,7 @@ save_file.addEventListener("click", () => {
 
 const channel = new BroadcastChannel("channel");
 channel.onmessage = (event) => {
+    console.log("Received", event.data);
   switch (event.data) {
     case "forbid-launch":
       document.getElementById("fit_div").classList.add("disabled");
@@ -85,6 +86,10 @@ channel.onmessage = (event) => {
       document.getElementById("fit_div").classList.remove("disabled");
       return;
     default:
+      // Sending content of div to webserver`
+      var content = box.innerHTML;
+     console.log(box.contentWindow);
+      console.log(content.querySelector(".entry"));
       box.innerHTML =
         '<object width="100%" height="100%" type="text/html" data="/toggable_calendar"</object>';
       return;

@@ -1,6 +1,9 @@
 let holdInterval;
 var table = document.getElementById("table");
 
+var id_max = 0;
+var ids = {};
+
 document.getElementById("entry").addEventListener("click", row_selection);
 
 document.querySelectorAll(".input").forEach((element) => {
@@ -29,10 +32,10 @@ document.addEventListener("keydown", (event) => {
         return;
       }
       if (!is_row_selected()) insert();
-        // Element clicked is name input of row that is not entry
-        if (invalidName()) sendForbidLaunch();
-        else sendAllowLaunch();
-      
+      // Element clicked is name input of row that is not entry
+      if (invalidName()) sendForbidLaunch();
+      else sendAllowLaunch();
+
       activeElement.blur();
       return;
     case "Escape":
@@ -61,15 +64,13 @@ function invalidName() {
     if (value == "") {
       hasEmpty = true;
       return;
-    }
-    else {
-      if (values.includes(value))
-      {
-	  hasDuplicate = true;
-	  return;
     } else {
-      values.push(value);
-    }
+      if (values.includes(value)) {
+        hasDuplicate = true;
+        return;
+      } else {
+        values.push(value);
+      }
     }
   });
   return hasEmpty || hasDuplicate;
@@ -86,7 +87,8 @@ function insert() {
   clone.id = "";
   clone.querySelector(".field_id").readOnly = true;
   clone.cells[row.cells.length - 1].innerHTML =
-    '<a href="#" onclick="openPopup(this); return false;">Click here</a>';
+    `<a href="#" onclick="_openPopup(${id_max}); return false;">Click here</a>`;
+  ids[id_max++] = clone;
 
   // Copying selects
 
@@ -114,4 +116,8 @@ function insert() {
 function clean_input(row) {
   row.querySelector(".field_id").value = "";
   row.querySelector(".field_portion").value = "Terrain entier";
+}
+
+function _openPopup(id) {
+  openPopup("fields", id, ids);
 }

@@ -1,6 +1,9 @@
 let holdInterval;
 var table = document.getElementById("table");
 
+var id_max = 0;
+var ids = {}
+
 document.getElementById("entry").addEventListener("click", row_selection);
 
 document.querySelectorAll(".input").forEach((element) => {
@@ -80,9 +83,10 @@ function plus(button) {
 }
 
 function rectified_value(value, min, max) {
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
+  var retVal = value;
+  if (value < min) retVal = min;
+  if (value > max) retVal =  max;
+    return isNaN(retVal) ? 0 : retVal;
 }
 
 function insert() {
@@ -100,13 +104,14 @@ function insert() {
     clone_copy[i].value = row_copy[i].value;
   }
 
-  clone.querySelector(".id").addEventListener("blur", (element) => {
+  clone.querySelector(".id").addEventListener("input", (element) => {
     if (emptyName()) sendForbidLaunch();
     else sendAllowLaunch();
   });
 
   clone.querySelectorAll(".input").forEach((element) => {
     element.addEventListener("blur", () => {
+	console.log("UWU");
       element.value = rectified_value(
         Number(element.value.trim()),
         Number(element.parentElement.dataset.min.trim),
@@ -116,8 +121,8 @@ function insert() {
   });
 
   clone.cells[row.cells.length - 1].innerHTML =
-    '<a href="#" onclick="openPopup(this); return false;">Click here</a>';
-
+	`<a href="#" onclick="_openPopup(${id_max}); return false;">Click here</a>`;
+  ids[id_max++] = clone;
   table.tBodies[0].insertBefore(clone, row);
 
   // Cleaning input
@@ -130,4 +135,8 @@ function clean_input(row) {
   row.querySelector(".field_type").value = "Terrain en herbe";
   row.querySelector(".gametime").querySelector("input").value = "0";
   row.querySelector(".priority").querySelector("input").value = "0";
+}
+
+function _openPopup(id){
+    openPopup("teams", id, ids);
 }
