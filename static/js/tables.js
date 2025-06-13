@@ -44,40 +44,64 @@ function row_selection(event) {
   row_selected_interation(row, document.querySelector(".row_selected") == null);
 }
 
-const channel = new BroadcastChannel("channel");
-
 function sendForbidLaunch() {
-  channel.postMessage("forbid-launch");
+  window.top.postMessage("forbid-launch");
 }
 
 function sendAllowLaunch() {
-  channel.postMessage("allow-launch");
+  window.top.postMessage("allow-launch");
 }
 
 function toArray(row) {
+  console.log(row, Array.isArray(row));
+  if (Array.isArray(row)) return row;
   return Array.from(row.querySelectorAll("td"), (cell) => cell.children[0])
     .filter((element) => element.classList.length > 0)
-    .map((element) =>
-      element.tagName == "DIV"
-        ? element.querySelector("input").value.trim()
-        : element.value.trim(),
-    );
+    .map((element) => {
+      switch (element.tagName) {
+        case "DIV":
+          return parseInt(element.querySelector("input").value.trim());
+        case "SELECT":
+          return element.selectedIndex;
+        default:
+          return element.value.trim();
+      }
+    });
 }
 
-function openPopup(type, key, ids) {
+async function sendDivContent() {
+  var type = new URL(window.location.href).pathname
+    .split("/")
+    .filter(Boolean)
+    .pop();
+
+  console.log("ids", ids);
+
   for (const [key, value] of Object.entries(ids)) {
     ids[key] = toArray(value);
   }
 
   console.log(ids);
-  fetch("/tables-send-data", {
+
+  return fetch("/tables-send-data", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    cache: "no-cache",
     body: JSON.stringify({
       type: type,
       data: ids,
     }),
   });
-
-  channel.postMessage(`${type} ${key}`);
 }
+
+async function openPopup(key) {
+  await this.sendDivContent(ids);
+  window.top.postMessage("open-cal-popup");
+}
+
+window.onmessage = async (event) => {
+  if (["fields", "teams"].includes(event.data)) {
+    if (Object.keys(ids).length != 0) await this.sendDivContent();
+    window.top.postMessage(event.data);
+  }
+};

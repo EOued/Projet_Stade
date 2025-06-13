@@ -5,36 +5,33 @@ import zlib
 
 app = Flask(__name__)
 
-data = {"teams": {
-"""
-format:
-"id": {
-"values":["name", portion(int), gametime(int), priority(int), field_type(int)]   
-"excluded_days:[mon, tue, wes, thu, fri, sat, sun]
+data = {
+    "teams": {},
+    "fields": {},
 }
-"""
-}, "fields": {
-"""
-format:
-"id": {
-    "type": 0,
-    "periods": [249600, 3840, 1036032, 0, 1036032, 1036224, 0]
-}
-"""
-
-}}
 
 tep_team = ""
 fp_field = ""
+
 
 @app.route("/")
 def run():
     return render_template("index.html")
 
+
+@app.route("/teams-content")
+def teams_content():
+    print(data)
+    return data["teams"]
+
+
 @app.route("/tables-send-data", methods=["POST"])
 def tables_submit():
-    print(request.get_json())
-    return ""
+    type = request.get_json()["type"]
+    jsondata = request.get_json()["data"]
+    data[type] = jsondata
+    print("saved data:", data)
+    return "", 200
 
 
 @app.route("/toggable_calendar")

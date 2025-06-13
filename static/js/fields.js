@@ -1,8 +1,8 @@
 let holdInterval;
 var table = document.getElementById("table");
 
-var id_max = 0;
-var ids = {};
+id_max = 0;
+ids = {};
 
 document.getElementById("entry").addEventListener("click", row_selection);
 
@@ -119,5 +119,5 @@ function clean_input(row) {
 }
 
 function _openPopup(id) {
-  openPopup("fields", id, ids);
+  openPopup("fields", id);
 }

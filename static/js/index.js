@@ -6,16 +6,28 @@ const fit_div = document.getElementById("fit_div");
 const load_file = document.getElementById("load_file");
 const save_file = document.getElementById("save_file");
 
-const box = document.getElementById("preview");
+const iframe = document.getElementById("iframe");
+
+var isIFrameLoaded = false;
 
 teams_div.addEventListener("click", () => {
-  box.innerHTML =
-    '<object width="100%" height="100%" type="text/html" data="/teams"</object>';
+  if (isIFrameLoaded) iframe.contentWindow.postMessage("teams");
+  else iframe.src = "/teams";
+  isIFrameLoaded = false;
 });
 
 fields_div.addEventListener("click", () => {
-  box.innerHTML =
-    '<object width="100%" height="100%" type="text/html" data="/fields"</object>';
+  if (isIFrameLoaded) iframe.contentWindow.postMessage("fields");
+  iframe.src = "/fields";
+  isIFrameLoaded = false;
+});
+
+iframe.addEventListener("load", () => {
+  isIFrameLoaded = true;
+  var innerDoc = iframe.contentDocument
+    ? iframe.contentDocument
+    : iframe.contentWindow.document;
+  console.log(innerDoc.getElementById("table"));
 });
 
 load_file.addEventListener("click", () => {
@@ -29,7 +41,7 @@ load_file.addEventListener("click", () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = function (event) {
-        const rawString = event.target.result; // This is your string
+        const rawString = event.target.result;
         fetch("http://localhost:5000/content_decoding", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -39,7 +51,6 @@ load_file.addEventListener("click", () => {
         });
 
         console.log("Raw string:", rawString);
-        // You can now save or send this string as-is
       };
 
       reader.readAsText(file);
@@ -75,9 +86,8 @@ save_file.addEventListener("click", () => {
     });
 });
 
-const channel = new BroadcastChannel("channel");
-channel.onmessage = (event) => {
-    console.log("Received", event.data);
+window.onmessage = (event) => {
+  console.log("Received", event.data);
   switch (event.data) {
     case "forbid-launch":
       document.getElementById("fit_div").classList.add("disabled");
@@ -85,13 +95,12 @@ channel.onmessage = (event) => {
     case "allow-launch":
       document.getElementById("fit_div").classList.remove("disabled");
       return;
+    case "teams":
+      iframe.src = "/teams";
+      return;
+    case "fields":
+      iframe.src = "/fields";
     default:
-      // Sending content of div to webserver`
-      var content = box.innerHTML;
-     console.log(box.contentWindow);
-      console.log(content.querySelector(".entry"));
-      box.innerHTML =
-        '<object width="100%" height="100%" type="text/html" data="/toggable_calendar"</object>';
       return;
   }
 };

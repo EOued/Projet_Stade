@@ -51,7 +51,7 @@ input:focus {
   outline: none;
 }
 
-#preview {
+iframe {
   background-color: var(--c6);
   flex: 10;
   border: 3px solid black;

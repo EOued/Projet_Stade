@@ -1,53 +1,108 @@
 let holdInterval;
 var table = document.getElementById("table");
 
-var id_max = 0;
-var ids = {}
+onLoad();
 
-document.getElementById("entry").addEventListener("click", row_selection);
+async function fetchContent() {
+  console.log("UWU");
+  return fetch("/teams-content")
+    .then((response) => response.text())
+    .then((data) => {
+      ids = JSON.parse(data);
+      console.log("data", data);
+    });
+}
 
-document.querySelectorAll(".input").forEach((element) => {
-  element.addEventListener("blur", () => {
-    element.value = rectified_value(
-      Number(element.value.trim()),
-      Number(element.parentElement.dataset.min.trim()),
-      Number(element.parentElement.dataset.max.trim()),
-    );
-  });
-});
+async function onLoad() {
+  id_max = 0;
+  ids = {};
 
-document.addEventListener("keydown", (event) => {
-  switch (event.key) {
-    case "Enter":
-      var activeElement = document.activeElement;
+  await fetchContent();
 
-      if (
-        activeElement.tagName == "INPUT" &&
-        activeElement.parentElement.classList.contains("numbers_entry_div")
-      ) {
-        activeElement.value = rectified_value(
-          Number(activeElement.value.trim()),
-          Number(activeElement.parentElement.dataset.min.trim()),
-          Number(activeElement.parentElement.dataset.max.trim()),
-        );
-        return;
-      }
-      if (!is_row_selected()) insert();
+  // fetching content from webserver
+  console.log("loaded", ids);
+  for (const [key, value] of Object.entries(ids)) {
+    console.log(value);
+    if (id_max <= parseInt(key)) id_max = parseInt(key) + 1;
+
+    var row = document.getElementById("entry");
+
+    const clone = row.cloneNode(true);
+    clone.id = "";
+    clone.addEventListener("click", row_selection);
+    clone.querySelector(".id").readOnly = true;
+    clone.querySelector(".id").addEventListener("input", (element) => {
       if (emptyName()) sendForbidLaunch();
       else sendAllowLaunch();
-      
-      activeElement.blur();
-      return;
-    case "Escape":
-      if (is_row_selected()) unselect_all();
-      document.activeElement.blur();
-      return;
-    case "Delete":
-      if (is_row_selected()) get_selected_row().remove();
-    default:
-      return;
+    });
+
+    clone.querySelectorAll(".input").forEach((element) => {
+      element.addEventListener("blur", () => {
+        element.value = rectified_value(
+          Number(element.value.trim()),
+          Number(element.parentElement.dataset.min.trim),
+          Number(element.parentElement.dataset.max.trim),
+        );
+      });
+    });
+
+    clone.querySelector(".id").value = value[0];
+    clone.querySelector(".field_portion").selectedIndex = value[1];
+    clone.querySelector(".gametime").querySelector("input").value = value[2];
+    clone.querySelector(".priority").querySelector("input").value = value[3];
+    clone.querySelector(".field_type").selectedIndex = value[4];
+
+    clone.cells[row.cells.length - 1].innerHTML =
+      `<a href="#" onclick="_openPopup(${id_max}); return false;">Click here</a>`;
+
+    ids[key] = clone;
+    table.tBodies[0].insertBefore(clone, row);
   }
-});
+  console.log(id_max);
+
+  document.querySelectorAll(".input").forEach((element) => {
+    element.addEventListener("blur", () => {
+      element.value = rectified_value(
+        Number(element.value.trim()),
+        Number(element.parentElement.dataset.min.trim()),
+        Number(element.parentElement.dataset.max.trim()),
+      );
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    switch (event.key) {
+      case "Enter":
+        var activeElement = document.activeElement;
+
+        if (
+          activeElement.tagName == "INPUT" &&
+          activeElement.parentElement.classList.contains("numbers_entry_div")
+        ) {
+          activeElement.value = rectified_value(
+            Number(activeElement.value.trim()),
+            Number(activeElement.parentElement.dataset.min.trim()),
+            Number(activeElement.parentElement.dataset.max.trim()),
+          );
+          return;
+        }
+        if (!is_row_selected()) insert();
+        if (emptyName()) sendForbidLaunch();
+        else sendAllowLaunch();
+
+        activeElement.blur();
+        return;
+      case "Escape":
+        if (is_row_selected()) unselect_all();
+        document.activeElement.blur();
+        return;
+      case "Delete":
+        if (is_row_selected()) get_selected_row().remove();
+      default:
+        return;
+    }
+  });
+}
 
 function startHold(button, callback) {
   callback(button);
@@ -85,8 +140,8 @@ function plus(button) {
 function rectified_value(value, min, max) {
   var retVal = value;
   if (value < min) retVal = min;
-  if (value > max) retVal =  max;
-    return isNaN(retVal) ? 0 : retVal;
+  if (value > max) retVal = max;
+  return isNaN(retVal) ? 0 : retVal;
 }
 
 function insert() {
@@ -99,11 +154,6 @@ function insert() {
 
   var clone_copy = clone.querySelectorAll("select");
   var row_copy = row.querySelectorAll("select");
-
-  for (var i = 0; i < clone_copy.length; i++) {
-    clone_copy[i].value = row_copy[i].value;
-  }
-
   clone.querySelector(".id").addEventListener("input", (element) => {
     if (emptyName()) sendForbidLaunch();
     else sendAllowLaunch();
@@ -111,7 +161,7 @@ function insert() {
 
   clone.querySelectorAll(".input").forEach((element) => {
     element.addEventListener("blur", () => {
-	console.log("UWU");
+      console.log("UWU");
       element.value = rectified_value(
         Number(element.value.trim()),
         Number(element.parentElement.dataset.min.trim),
@@ -120,8 +170,12 @@ function insert() {
     });
   });
 
+  for (var i = 0; i < clone_copy.length; i++) {
+    clone_copy[i].value = row_copy[i].value;
+  }
+
   clone.cells[row.cells.length - 1].innerHTML =
-	`<a href="#" onclick="_openPopup(${id_max}); return false;">Click here</a>`;
+    `<a href="#" onclick="_openPopup(${id_max}); return false;">Click here</a>`;
   ids[id_max++] = clone;
   table.tBodies[0].insertBefore(clone, row);
 
@@ -137,6 +191,6 @@ function clean_input(row) {
   row.querySelector(".priority").querySelector("input").value = "0";
 }
 
-function _openPopup(id){
-    openPopup("teams", id, ids);
+function _openPopup(id) {
+  openPopup("teams", id);
 }
