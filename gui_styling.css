@@ -2,10 +2,18 @@ button {
   border-radius: 20px;
 }
 
+grid > label {
+  border-left: 1px solid;
+  border-right: 1px solid;
+}
+
+grid > box {
+  border: 1px double;
+}
 grid {
   border: 1px solid;
 }
 
-grid > * > * {
-  border: 1px solid;
+grid > box > button {
+  font-size: initial;
 }
