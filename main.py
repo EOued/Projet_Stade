@@ -1,19 +1,27 @@
 import sys
 
-import PyQt6
-from uuid import uuid4
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import (
-    QApplication,
-    QHeaderView,
-    QPushButton,
-    QTableWidget,
-)
+from PyQt6.QtWidgets import QApplication, QPushButton, QTableWidget
 from PyQt6.uic import loadUi
-
-from periods import PeriodsUI
-import utils
-from utils import Position, Element, Type, retrieve_data
+from periods.periods import PeriodsUI
+from utils.utils import (
+    Element,
+    Menu,
+    Position,
+    Type,
+    fields_data_loading,
+    fields_data_parsing,
+    parse,
+    periods_fields_adder,
+    retrieve_data_fields,
+    retrieve_data_teams,
+    save_row,
+    table_fill_parent,
+    table_set_headers,
+    periods_teams_adder,
+    teams_data_loading,
+    teams_data_parsing,
+)
 
 
 class MyApplication:
@@ -24,7 +32,7 @@ class MyApplication:
         if self.window is None:
             return
 
-        self.context_menu = utils.Menu()
+        self.context_menu = Menu()
         self.context_menu.action(
             "Insérer une nouvelle ligne avant cette ligne",
             lambda: self.insert_row(Position.BEFORE),
@@ -52,18 +60,18 @@ class MyApplication:
         self.fields_row_list: list[str] = [
             'TextEntry-["Nom"]',
             'ComboBox-[["Synthétique", "Naturel"]]',
+            'Button-["Périodes"]',
         ]
 
         self.teams_row_list: list[str] = [
             'TextEntry-["Nom"]',
-            'ComboBox-[["Synthétique", "Naturel"]]',
             'ComboBox-[["Terrain entier", "Demi terrain", "Quart de terrain"]]',
-            "SpinBox-[0, 168, 0, 1]",
             "SpinBox-[0, 100, 0, 1]",
             'Button-["Périodes"]',
         ]
 
         self.teams_periods_data = {}
+        self.fields_periods_data = {}
         self.type: Type = Type.FIELDS
         self.window.show()
         self.preprocessing()
@@ -71,20 +79,20 @@ class MyApplication:
     def preprocessing(self):
         if self.window is None:
             return
-        utils.table_set_headers(
+        table_set_headers(
             self.window.findChild(QTableWidget, "fields_table"),
             ["Identifiant", "Type", "Période"],
         )
-        utils.table_set_headers(
+        table_set_headers(
             self.window.findChild(QTableWidget, "teams_table"),
-            ["Identifiant", "Type", "Portion", "Temps de jeu", "Priorité", "Période"],
+            ["Identifiant", "Portion", "Priorité", "Période"],
         )
 
         for type in Type:
             self.type = type
             table = self.select_element(Element.TABLE)
             if isinstance(table, QTableWidget):
-                utils.table_fill_parent(table)
+                table_fill_parent(table)
             self.set_empty_row(0)
 
     def get_dict_rows(self):
@@ -117,22 +125,45 @@ class MyApplication:
         self.context_menu.exec(widget.mapToGlobal(pos))
 
     def widget_empty_row_processing(self, widget, table, dict, row, column):
-        utils.save_row(widget, dict, row)
-        self.addRightClickMenu(
-            widget,
-            (Type.TEAMS if dict == self.teams_widget_rows else Type.FIELDS),
-        )
+        save_row(widget, dict, row)
+        type = Type.TEAMS if dict == self.teams_widget_rows else Type.FIELDS
+        self.addRightClickMenu(widget, type)
         if isinstance(widget, QPushButton):
-            widget.clicked.connect(lambda _: self.periods_popuped(widget.objectName()))
+            widget.clicked.connect(
+                lambda _: self.periods_popuped(widget.objectName(), type)
+            )
 
         table.setCellWidget(row, column, widget)
 
-    def periods_popuped(self, uuid):
-        data = retrieve_data(self.teams_periods_data, uuid)
-        popup = PeriodsUI(data)
+    def periods_popuped(self, uuid, type):
+        if type == Type.TEAMS:
+            self.teams_periods_popuped(uuid)
+        else:
+            self.fields_periods_popuped(uuid)
+
+    def teams_periods_popuped(self, uuid):
+        data = retrieve_data_teams(self.teams_periods_data, uuid)
+        popup = PeriodsUI(teams_data_loading(data), periods_teams_adder)
+        if popup.window is None:
+            return
         popup.window.exec()
         if popup.accept:
-            self.teams_periods_data[uuid] = popup.saved_data
+            # Edit in place
+            teams_data_parsing(popup.displayed_data, data)
+
+    def fields_periods_popuped(self, uuid):
+        data = retrieve_data_fields(self.fields_periods_data, uuid)
+        popup = PeriodsUI(
+            fields_data_loading(data), periods_fields_adder, ["type_combo"]
+        )
+        if popup.window is None:
+            return
+        popup.window.exec()
+        if popup.accept:
+
+            fields_data_parsing(popup.displayed_data, data)
+            # Edit in place
+            pass
 
     def set_empty_row(self, row):
         elemList = self.select_element(Element.SERIALIZED)
@@ -141,7 +172,7 @@ class MyApplication:
 
         for column, element in enumerate(elemList):
             self.widget_empty_row_processing(
-                utils.parse(element),
+                parse(element),
                 self.select_element(Element.TABLE),
                 self.select_element(Element.ROWS),
                 row,
@@ -156,7 +187,9 @@ class MyApplication:
 
     def delete_current_row(self):
         current_table = self.select_element(Element.TABLE)
-        if self.clicked_widget == None or not isinstance(current_table, QTableWidget):
+        if self.clicked_widget == None:
+            return
+        if not isinstance(current_table, QTableWidget):
             return
 
         row = self.get_widget_row()
@@ -165,7 +198,7 @@ class MyApplication:
         if self.current_table_filled_rows < 10:
             current_table.insertRow(current_table.rowCount())
         self.current_table_filled_rows -= 1
-        utils.table_fill_parent(current_table)
+        table_fill_parent(current_table)
 
     def insert_row(self, pos: Position):
         position = self.get_widget_row() + pos.value
@@ -182,7 +215,7 @@ class MyApplication:
 
         self.set_empty_row(position)
         self.current_table_filled_rows += 1
-        utils.table_fill_parent(current_table)
+        table_fill_parent(current_table)
 
     def rows_dict_delete_row(self, row):
         _keytodel = []
