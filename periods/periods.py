@@ -64,12 +64,7 @@ class PeriodsUI:
         self.sb_start = SpinBoxConnection(self.window, "start", "Début:", "heure")
         self.sb_end = SpinBoxConnection(self.window, "end", "Fin:", "heure")
 
-        buttons = self.window.findChild(QDialogButtonBox, "buttonBox")
-        buttons.accepted.connect(lambda: self.leave(True))
-        buttons.rejected.connect(lambda: self.leave(False))
-
         self.displayed_data = loaded_content
-        self.accept = False
 
         self.update_data()
         self.window.show()
@@ -105,9 +100,6 @@ class PeriodsUI:
             self.displayed_data[root].append(items)
         self.update_data()
         period_popup_error_code(error_list)
-
-    def leave(self, isAccepted):
-        self.accept = isAccepted
 
     def update_data(self):
         self.tree.clear()

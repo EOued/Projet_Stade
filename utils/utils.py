@@ -1,4 +1,6 @@
+from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import (
+    QFileDialog,
     QHeaderView,
     QLineEdit,
     QComboBox,
@@ -12,27 +14,40 @@ from PyQt6.QtWidgets import (
 from enum import Enum
 from uuid import uuid4
 import json
+import os
 
 
-def parse(string):
+def parse(string, value=None):
     widget = None
+    parameters = json.loads(string.split("-")[1])
     match string.split("-")[0]:
         case "TextEntry":
-            widget = TextEntry
+            widget = TextEntry(*parameters)
         case "ComboBox":
-            widget = ComboBox
+            widget = ComboBox(*parameters)
         case "SpinBox":
-            widget = SpinBox
+            widget = SpinBox(*parameters)
         case "Button":
-            widget = QPushButton
+            widget = QPushButton(*parameters)
         case _:
             return None
+    if value is None:
+        return widget
 
-    parameters = json.loads(string.split("-")[1])
-    return widget(*parameters)
+    if isinstance(widget, TextEntry):
+        widget.setText(value)
+
+    if isinstance(widget, ComboBox):
+        widget.setCurrentIndex(value)
+
+    if isinstance(widget, SpinBox):
+        widget.setValue(value)
+    return widget
 
 
-def table_fill_parent(table: QTableWidget):
+def table_fill_parent(table):
+    if not isinstance(table, QTableWidget):
+        return
     v_header = table.verticalHeader()
     h_header = table.horizontalHeader()
     if v_header is None or h_header is None:
@@ -61,18 +76,6 @@ def daypint(day):
     return {"lu": 0, "ma": 1, "me": 2, "je": 3, "ve": 4, "sa": 5, "di": 6}[day.lower()]
 
 
-def retrieve_data_teams(dict, uuid):
-    if uuid not in dict:
-        dict[uuid] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
-    return dict[uuid]
-
-
-def retrieve_data_fields(dict, uuid):
-    if uuid not in dict:
-        dict[uuid] = [0, 0, 0, 0, 0, 0, 0]
-    return dict[uuid]
-
-
 def period_popup_error_code(error_list):
     error_message = ""
     for day, errorcode in error_list:
@@ -96,25 +99,6 @@ def insert_item_to_tree(tree, root, children):
         return
     item = TreeItem(root, children)
     tree.insertTopLevelItems(0, [item])
-
-
-def int_to_time_periods(x: int, ftype: int = 0) -> list[list[int]]:
-    periods = []
-    start = None
-
-    for i in range(24):
-        if (x >> i) & 1:
-            if start is None:
-                start = i
-        else:
-            if start is not None:
-                periods.append([start, i, (ftype >> i - 1) & 1])
-                start = None
-
-    if start is not None:
-        periods.append([start, 0, (ftype >> 23) & 1])
-
-    return periods
 
 
 def intpftype(x: int):
@@ -162,12 +146,6 @@ class Position(Enum):
     AFTER = 1
 
 
-class Element(Enum):
-    TABLE = 0
-    ROWS = 1
-    SERIALIZED = 2
-
-
 class Type(Enum):
     FIELDS = 0
     TEAMS = 1
@@ -187,6 +165,12 @@ class SpinBoxConnection:
 
     def value(self):
         return self.spinbox.value()
+
+
+class ActionMenuConnection:
+    def __init__(self, window, actionName, function):
+        action = window.findChild(QAction, actionName)
+        action.triggered.connect(function)
 
 
 class ComboBoxValue:
@@ -211,177 +195,46 @@ class TreeItem(QTreeWidgetItem):
             super().addChild(QTreeWidgetItem(child))
 
 
-def periods_teams_adder(days, elements):
-    checkboxes = [
-        day.isChecked()
-        for day in days
-        if day.objectName() in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-    ]
+class Variables:
+    def __init__(self):
+        self.frows: list[str] = [
+            'TextEntry-["Nom"]',
+            'ComboBox-[["Synthétique", "Naturel"]]',
+            'Button-["Périodes"]',
+        ]
 
-    start = [
-        elem.value()
-        for elem in elements
-        if isinstance(elem, QSpinBox) and elem.objectName() == "start"
-    ][0]
+        self.trows: list[str] = [
+            'TextEntry-["Nom"]',
+            'ComboBox-[["Terrain entier", "Demi terrain", "Quart de terrain"]]',
+            "SpinBox-[0, 100, 0, 1]",
+            'Button-["Périodes"]',
+        ]
 
-    end = [
-        elem.value()
-        for elem in elements
-        if isinstance(elem, QSpinBox) and elem.objectName() == "end"
-    ][0]
+        self.ftable_headers = ["Identifiants", "Type", "Période"]
+        self.ttable_headers = ["Identifiants", "Portion", "Priorité", "Période"]
 
-    ftype = [
-        elem.currentText()
-        for elem in elements
-        if isinstance(elem, QComboBox) and elem.objectName() == "type_combo"
-    ][0]
-
-    _days = [
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi",
-        "Dimanche",
-    ]
-    days = []
-    for index, day in enumerate(_days):
-        if checkboxes[index]:
-            days.append(day)
-
-    return days, [f"{start}h", f"{end}h", ftype]
+        pass
 
 
-def xor_period(start_hour, end_hour, ftype, day, saved_data):
+def dict_delete_row(dict, row):
+    _keytodel = []
+    widget_rows = dict
+    for key, value in widget_rows.items():
+        if value == row:
+            _keytodel.append(key)
+        else:
+            if value > row:
+                widget_rows[key] -= 1
+    for key in _keytodel:
+        del widget_rows[key]
 
-    if not ftype in [0, 1]:
-        saved_data[day] ^= 2**end_hour - 2**start_hour
+
+def openDialog():
+    dialog = QFileDialog(filter="*.json")
+    dialog.exec()
+    file = dialog.selectedFiles()[0]
+    if not os.path.isfile(file):
         return
-
-    saved_data[day][0] ^= 2**end_hour - 2**start_hour
-    mask = (2 ** (end_hour - start_hour) - 1) << start_hour
-    if ftype == 0:
-        val = 0 << (end_hour - start_hour)
-    else:
-        val = 2 ** (end_hour - start_hour) - 1
-
-    saved_data[day][1] = (saved_data[day][1] & ~mask) | (val & mask)
-
-
-def teams_data_parsing(displayed_data, saved_data):
-    for day, elements in displayed_data.items():
-        for element in elements:
-            start = int(element[0].split("h")[0])
-            end = int(element[1].split("h")[0])
-            ftype = ["Naturel", "Synthétique"].index(element[2])
-            xor_period(
-                start,
-                end,
-                ftype,
-                [
-                    "Lundi",
-                    "Mardi",
-                    "Mercredi",
-                    "Jeudi",
-                    "Vendredi",
-                    "Samedi",
-                    "Dimanche",
-                ].index(day),
-                saved_data,
-            )
-
-
-def fields_data_parsing(displayed_data, saved_data):
-    for day, elements in displayed_data.items():
-        for element in elements:
-            start = int(element[0].split("h")[0])
-            end = int(element[1].split("h")[0])
-            xor_period(
-                start,
-                end,
-                -1,
-                [
-                    "Lundi",
-                    "Mardi",
-                    "Mercredi",
-                    "Jeudi",
-                    "Vendredi",
-                    "Samedi",
-                    "Dimanche",
-                ].index(day),
-                saved_data,
-            )
-
-
-def teams_data_loading(data):
-    ret_data = {}
-    days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
-    for day, elements in enumerate(data):
-        for element in int_to_time_periods(*elements):
-            if element == []:
-                continue
-            if days[day] not in ret_data:
-                ret_data[days[day]] = []
-            ret_data[days[day]].append(
-                [
-                    f"{element[0]}h",
-                    f"{element[1]}h",
-                    ["Naturel", "Synthétique"][element[2]],
-                ]
-            )
-    return ret_data
-
-
-def fields_data_loading(data):
-    ret_data = {}
-    days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
-    for day, elements in enumerate(data):
-        for element in int_to_time_periods(elements):
-            if element == []:
-                continue
-            if days[day] not in ret_data:
-                ret_data[days[day]] = []
-            ret_data[days[day]].append(
-                [
-                    f"{element[0]}h",
-                    f"{element[1]}h",
-                ]
-            )
-    return ret_data
-
-
-def periods_fields_adder(days, elements):
-    checkboxes = [
-        day.isChecked()
-        for day in days
-        if day.objectName() in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
-    ]
-
-    start = [
-        elem.value()
-        for elem in elements
-        if isinstance(elem, QSpinBox) and elem.objectName() == "start"
-    ][0]
-
-    end = [
-        elem.value()
-        for elem in elements
-        if isinstance(elem, QSpinBox) and elem.objectName() == "end"
-    ][0]
-
-    _days = [
-        "Lundi",
-        "Mardi",
-        "Mercredi",
-        "Jeudi",
-        "Vendredi",
-        "Samedi",
-        "Dimanche",
-    ]
-    days = []
-    for index, day in enumerate(_days):
-        if checkboxes[index]:
-            days.append(day)
-
-    return days, [f"{start}h", f"{end}h"]
+    with open(file, "r") as f:
+        _data = json.load(f)
+    return _data
