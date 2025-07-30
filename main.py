@@ -39,6 +39,7 @@ class MyApplication:
 
         ActionMenuConnection(self.window, "actionOpen", self.load_file)
         ActionMenuConnection(self.window, "actionSave", self.save_file)
+        ActionMenuConnection(self.window, "actionSave_as", self.save_as_file)
 
         self.context_menu = Menu()
         self.context_menu.action(
@@ -115,6 +116,12 @@ class MyApplication:
                     table.removeRow(table.rowCount() - 1)
 
             table_fill_parent(table)
+
+    def save_as_file(self):
+        temp = self.filepath
+        self.filepath = None
+        self.save_file()
+        self.filepath = temp
 
     def save_file(self):
         if self.filepath is None or not os.path.isfile(self.filepath):
