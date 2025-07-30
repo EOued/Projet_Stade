@@ -88,7 +88,6 @@ class MyApplication:
                     table.removeRow(table.rowCount() - 1)
 
             table_fill_parent(table)
-        print(self.pdata)
 
     def save_file(self):
         data = {"fields": [], "teams": []}
@@ -201,19 +200,6 @@ class MyApplication:
         for key, value in widget_rows.items():
             if value >= row:
                 widget_rows[key] += 1
-
-    def get_row_data(self, row, type):
-        print(
-            savable_data(
-                self.window,
-                [
-                    uuid
-                    for uuid, value in [self._frows, self._trows][type.value].items()
-                    if value == row
-                ],
-                self.pdata,
-            )
-        )
 
     def run(self):
         sys.exit(self.app.exec())

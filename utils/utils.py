@@ -14,6 +14,7 @@ from PyQt6.QtWidgets import (
 )
 from enum import Enum
 from uuid import uuid4
+from copy import deepcopy
 import json
 import os
 

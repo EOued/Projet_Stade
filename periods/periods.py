@@ -1,8 +1,5 @@
-import sys
-
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QDialogButtonBox,
     QHeaderView,
     QSplitter,
     QTreeWidget,
@@ -97,7 +94,7 @@ class PeriodsUI:
             if checker_ecode > 0:
                 error_list.append((root, checker_ecode))
                 continue
-            self.displayed_data[root].append(items)
+            self.displayed_data[root].append([""] + items)
         self.update_data()
         period_popup_error_code(error_list)
 

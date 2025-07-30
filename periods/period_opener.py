@@ -15,6 +15,16 @@ def retrieve_data_fields(dict, uuid):
     return dict[uuid]
 
 
+def reset_data_teams(dict, uuid):
+    dict[uuid] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+    return dict[uuid]
+
+
+def reset_data_fields(dict, uuid):
+    dict[uuid] = [0, 0, 0, 0, 0, 0, 0]
+    return dict[uuid]
+
+
 def xor_period(start_hour, end_hour, ftype, day, saved_data):
 
     if not ftype in [0, 1]:
@@ -34,9 +44,9 @@ def xor_period(start_hour, end_hour, ftype, day, saved_data):
 def teams_data_parsing(displayed_data, saved_data):
     for day, elements in displayed_data.items():
         for element in elements:
-            start = int(element[0].split("h")[0])
-            end = int(element[1].split("h")[0])
-            ftype = ["Naturel", "Synthétique"].index(element[2])
+            start = int(element[1].split("h")[0])
+            end = int(element[2].split("h")[0])
+            ftype = ["Naturel", "Synthétique"].index(element[3])
             xor_period(
                 start,
                 end,
@@ -57,8 +67,8 @@ def teams_data_parsing(displayed_data, saved_data):
 def fields_data_parsing(displayed_data, saved_data):
     for day, elements in displayed_data.items():
         for element in elements:
-            start = int(element[0].split("h")[0])
-            end = int(element[1].split("h")[0])
+            start = int(element[1].split("h")[0])
+            end = int(element[2].split("h")[0])
             xor_period(
                 start,
                 end,
@@ -87,6 +97,7 @@ def teams_data_loading(data):
                 ret_data[days[day]] = []
             ret_data[days[day]].append(
                 [
+                    "",
                     f"{element[0]}h",
                     f"{element[1]}h",
                     ["Naturel", "Synthétique"][element[2]],
@@ -106,6 +117,7 @@ def fields_data_loading(data):
                 ret_data[days[day]] = []
             ret_data[days[day]].append(
                 [
+                    "",
                     f"{element[0]}h",
                     f"{element[1]}h",
                 ]
@@ -211,15 +223,16 @@ def periods_teams_adder(days, elements):
 
 
 def periods_popup(uuid, data, type: Type):
-    _data = [retrieve_data_fields, retrieve_data_teams][type.value](data, uuid)
+    __data = [retrieve_data_fields, retrieve_data_teams][type.value](data, uuid)
     popup = PeriodsUI(
-        [fields_data_loading, teams_data_loading][type.value](_data),
+        [fields_data_loading, teams_data_loading][type.value](__data),
         [periods_fields_adder, periods_teams_adder][type.value],
         [["type_combo"], []][type.value],
     )
     if popup.window is None:
         return
     if popup.window.exec():
+        _data = [reset_data_fields, reset_data_teams][type.value](data, uuid)
         [fields_data_parsing, teams_data_parsing][type.value](
             popup.displayed_data, _data
         )
