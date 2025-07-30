@@ -1,7 +1,8 @@
+import json
 import sys
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QPushButton, QTableWidget
+from PyQt6.QtWidgets import QApplication, QPushButton, QTableWidget, QWidget
 from PyQt6.uic import loadUi
 from periods.period_opener import periods_popup
 from utils.utils import (
@@ -13,6 +14,7 @@ from utils.utils import (
     dict_delete_row,
     openDialog,
     parse,
+    savable_data,
     save_row,
     table_fill_parent,
     table_set_headers,
@@ -27,6 +29,7 @@ class MyApplication:
             raise ValueError("Window is not initialized")
 
         ActionMenuConnection(self.window, "actionOpen", self.load_file)
+        ActionMenuConnection(self.window, "actionSave", self.save_file)
 
         self.context_menu = Menu()
         self.context_menu.action(
@@ -39,6 +42,8 @@ class MyApplication:
         )
         self.context_menu.action("Supprimer cette ligne", self.delete_current_row)
 
+        self.filepath = ""
+
         self.ftable: QTableWidget = self.window.findChild(QTableWidget, "fields_table")
         self.ttable: QTableWidget = self.window.findChild(QTableWidget, "teams_table")
 
@@ -47,8 +52,7 @@ class MyApplication:
         self._frows: dict[str, int] = {}
         self._trows: dict[str, int] = {}
 
-        self.teams_periods_data = {}
-        self.fields_periods_data = {}
+        self.pdata = {}
         self.type: Type = Type.FIELDS
         self.window.show()
         self.preprocessing()
@@ -64,7 +68,8 @@ class MyApplication:
             self.set_row(0)
 
     def load_file(self):
-        data = openDialog()
+        filepath, data = openDialog()
+        self.filepath = filepath
         if data is None:
             return
 
@@ -77,13 +82,41 @@ class MyApplication:
             table.setRowCount(10)
             rows.clear()
             for index, _data in enumerate(data[string]):
-                print(_data, _data[0] + [None])
                 table.insertRow(index)
-                self.set_row(index, _data[0] + [None])
+                self.set_row(index, _data[0] + [None], _data[1])
                 if max(rows.values()) + 1 < 10:
                     table.removeRow(table.rowCount() - 1)
 
             table_fill_parent(table)
+        print(self.pdata)
+
+    def save_file(self):
+        data = {"fields": [], "teams": []}
+        for type in Type:
+            row = 0
+            while True:
+                _data = savable_data(
+                    self.window,
+                    [
+                        uuid
+                        for uuid, value in [self._frows, self._trows][
+                            type.value
+                        ].items()
+                        if value == row
+                    ],
+                    self.pdata,
+                )
+
+                row += 1
+                # Current row is empty, will thus not be saved
+                if _data == None:
+                    continue
+                # Reached end of rows, stop
+                if _data == [[], []]:
+                    break
+                data[["fields", "teams"][type.value]].append(_data)
+        with open(self.filepath, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
 
     def get_rows(self):
         return [self._frows, self._trows][self.type.value]
@@ -103,22 +136,22 @@ class MyApplication:
         self.clicked_widget = widget
         self.context_menu.exec(widget.mapToGlobal(pos))
 
-    def widget_empty_row_processing(self, widget, table, dict, row, column):
+    def widget_empty_row_processing(
+        self, widget, table, dict, row, column, periods=None
+    ):
         save_row(widget, dict, row)
         type = Type.TEAMS if dict == self._trows else Type.FIELDS
         self.addRightClickMenu(widget, type)
         if isinstance(widget, QPushButton):
+            if periods != None:
+                self.pdata[widget.objectName()] = periods
             widget.clicked.connect(
-                lambda _: periods_popup(
-                    widget.objectName(),
-                    [self.fields_periods_data, self.teams_periods_data],
-                    type,
-                )
+                lambda _: periods_popup(widget.objectName(), self.pdata, type)
             )
 
         table.setCellWidget(row, column, widget)
 
-    def set_row(self, row, values=None):
+    def set_row(self, row, values=None, periods=None):
         elemList = [Variables().frows, Variables().trows][self.type.value]
         for column, element in enumerate(elemList):
             self.widget_empty_row_processing(
@@ -127,6 +160,7 @@ class MyApplication:
                 self.get_rows(),
                 row,
                 column,
+                periods,
             )
 
     def get_widget_row(self):
@@ -167,6 +201,19 @@ class MyApplication:
         for key, value in widget_rows.items():
             if value >= row:
                 widget_rows[key] += 1
+
+    def get_row_data(self, row, type):
+        print(
+            savable_data(
+                self.window,
+                [
+                    uuid
+                    for uuid, value in [self._frows, self._trows][type.value].items()
+                    if value == row
+                ],
+                self.pdata,
+            )
+        )
 
     def run(self):
         sys.exit(self.app.exec())

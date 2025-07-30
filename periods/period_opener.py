@@ -211,9 +211,7 @@ def periods_teams_adder(days, elements):
 
 
 def periods_popup(uuid, data, type: Type):
-    _data = [retrieve_data_fields, retrieve_data_teams][type.value](
-        data[type.value], uuid
-    )
+    _data = [retrieve_data_fields, retrieve_data_teams][type.value](data, uuid)
     popup = PeriodsUI(
         [fields_data_loading, teams_data_loading][type.value](_data),
         [periods_fields_adder, periods_teams_adder][type.value],

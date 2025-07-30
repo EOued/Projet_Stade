@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QTableWidget,
     QPushButton,
     QTreeWidgetItem,
+    QWidget,
 )
 from enum import Enum
 from uuid import uuid4
@@ -199,7 +200,7 @@ class Variables:
     def __init__(self):
         self.frows: list[str] = [
             'TextEntry-["Nom"]',
-            'ComboBox-[["Synthétique", "Naturel"]]',
+            'ComboBox-[["Naturel", "Synthétique"]]',
             'Button-["Périodes"]',
         ]
 
@@ -234,7 +235,31 @@ def openDialog():
     dialog.exec()
     file = dialog.selectedFiles()[0]
     if not os.path.isfile(file):
-        return
+        return "", None
     with open(file, "r") as f:
         _data = json.load(f)
-    return _data
+    return file, _data
+
+
+def savable_data(window, rows, prows):
+    if window is None:
+        return
+    data = []
+    periods = []
+    for uuid in rows:
+        widget = window.findChild(QWidget, uuid)
+        if isinstance(widget, TextEntry):
+            if widget.text() == "":
+                return
+            data.append(widget.text())
+        if isinstance(widget, ComboBox):
+            data.append(widget.currentIndex())
+        if isinstance(widget, SpinBox):
+            data.append(widget.value())
+        if isinstance(widget, QPushButton):
+            try:
+                periods = prows[uuid]
+            except KeyError:
+                # No periods saved for that row
+                continue
+    return [data, periods]
