@@ -93,7 +93,7 @@ def period_popup_error_code(error_list):
             + ": la période n'a pas été ajoutée.\n"
         )
     if error_message != "":
-        PopupMessage(error_message)
+        PopupMessage(error_message).exec()
 
 
 def insert_item_to_tree(tree, root, children):
@@ -187,7 +187,18 @@ class PopupMessage(QMessageBox):
     def __init__(self, message):
         super().__init__()
         super().setText(message)
-        super().exec()
+
+
+class YesOrNoMessage(QMessageBox):
+    def __init__(self, parent, message, accept, cancel):
+        super().__init__()
+        self.question(
+            parent, "", message, self.StandardButton.Yes | self.StandardButton.No
+        )
+        if self.StandardButton.Yes:
+            accept()
+        else:
+            cancel()
 
 
 class TreeItem(QTreeWidgetItem):
@@ -231,15 +242,16 @@ def dict_delete_row(dict, row):
         del widget_rows[key]
 
 
-def openDialog():
+def filePicker(canCreate=False):
     dialog = QFileDialog(filter="*.json")
+    if canCreate:
+        dialog.setFileMode(QFileDialog.FileMode.AnyFile)
+        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
     dialog.exec()
     file = dialog.selectedFiles()[0]
     if not os.path.isfile(file):
-        return "", None
-    with open(file, "r") as f:
-        _data = json.load(f)
-    return file, _data
+        return None
+    return file
 
 
 def savable_data(window, rows, prows):
@@ -247,11 +259,12 @@ def savable_data(window, rows, prows):
         return
     data = []
     periods = []
+    # Empty row
+    if len(rows) == 0:
+        return None
     for uuid in rows:
         widget = window.findChild(QWidget, uuid)
         if isinstance(widget, TextEntry):
-            if widget.text() == "":
-                return
             data.append(widget.text())
         if isinstance(widget, ComboBox):
             data.append(widget.currentIndex())
@@ -264,3 +277,26 @@ def savable_data(window, rows, prows):
                 # No periods saved for that row
                 continue
     return [data, periods]
+
+
+def get_data(window, frows, trows, pdata):
+    data = {"fields": [], "teams": []}
+    for type in Type:
+        row = 0
+        while True:
+            _data = savable_data(
+                window,
+                [
+                    uuid
+                    for uuid, value in [frows, trows][type.value].items()
+                    if value == row
+                ],
+                pdata,
+            )
+
+            row += 1
+            # Reached end of rows, stop
+            if _data == None:
+                break
+            data[["fields", "teams"][type.value]].append(_data)
+    return data

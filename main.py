@@ -1,18 +1,27 @@
 import json
 import sys
+import os
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QApplication, QPushButton, QTableWidget, QWidget
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMessageBox,
+    QPushButton,
+    QTableWidget,
+)
 from PyQt6.uic import loadUi
 from periods.period_opener import periods_popup
 from utils.utils import (
     ActionMenuConnection,
     Menu,
+    PopupMessage,
     Position,
     Type,
     Variables,
+    YesOrNoMessage,
     dict_delete_row,
-    openDialog,
+    filePicker,
+    get_data,
     parse,
     savable_data,
     save_row,
@@ -52,6 +61,7 @@ class MyApplication:
         self._frows: dict[str, int] = {}
         self._trows: dict[str, int] = {}
 
+        self.init_data = {"fields": [[["", 0], []]], "teams": [[["", 0, 0], []]]}
         self.pdata = {}
         self.type: Type = Type.FIELDS
         self.window.show()
@@ -68,10 +78,27 @@ class MyApplication:
             self.set_row(0)
 
     def load_file(self):
-        filepath, data = openDialog()
-        self.filepath = filepath
+        current_data = get_data(self.window, self._frows, self._trows, self.pdata)
+        if current_data != self.init_data:
+            YesOrNoMessage(
+                self.window,
+                "This file have been modified. Save it ?",
+                self.save_file,
+                lambda _: _,
+            )
+
+        self.filepath = filePicker()
+        if self.filepath == None:
+            PopupMessage("Invalid file selected.")
+            return
+        data = None
+        with open(self.filepath, "r") as f:
+            data = json.load(f)
+
         if data is None:
             return
+
+        self.init_data = data
 
         for table, rows, string, type in [
             (self.ttable, self._trows, "teams", Type.TEAMS),
@@ -90,30 +117,12 @@ class MyApplication:
             table_fill_parent(table)
 
     def save_file(self):
-        data = {"fields": [], "teams": []}
-        for type in Type:
-            row = 0
-            while True:
-                _data = savable_data(
-                    self.window,
-                    [
-                        uuid
-                        for uuid, value in [self._frows, self._trows][
-                            type.value
-                        ].items()
-                        if value == row
-                    ],
-                    self.pdata,
-                )
+        if self.filepath is None or not os.path.isfile(self.filepath):
+            self.filepath = filePicker(True)
+            if self.filepath is None:
+                return
 
-                row += 1
-                # Current row is empty, will thus not be saved
-                if _data == None:
-                    continue
-                # Reached end of rows, stop
-                if _data == [[], []]:
-                    break
-                data[["fields", "teams"][type.value]].append(_data)
+        data = get_data(self.window, self._frows, self._trows, self.pdata)
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
