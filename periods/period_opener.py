@@ -30,15 +30,9 @@ def xor_period(start_hour, end_hour, ftype, day, saved_data):
     if not ftype in [0, 1]:
         saved_data[day] ^= 2**end_hour - 2**start_hour
         return
-
     saved_data[day][0] ^= 2**end_hour - 2**start_hour
-    mask = (2 ** (end_hour - start_hour) - 1) << start_hour
-    if ftype == 0:
-        val = 0 << (end_hour - start_hour)
-    else:
-        val = 2 ** (end_hour - start_hour) - 1
-
-    saved_data[day][1] = (saved_data[day][1] & ~mask) | (val & mask)
+    if ftype == 1:
+        saved_data[day][1] |= 2**end_hour - 2**start_hour
 
 
 def teams_data_parsing(displayed_data, saved_data):
@@ -128,15 +122,21 @@ def fields_data_loading(data):
 def int_to_time_periods(x: int, ftype: int = 0) -> list[list[int]]:
     periods = []
     start = None
-
+    _ftype = ftype & 1
     for i in range(24):
         if (x >> i) & 1:
             if start is None:
+                start = i
+            # ftype shifted at point
+            if start is not None and _ftype != (ftype >> i) & 1:
+                periods.append([start, i, _ftype])
                 start = i
         else:
             if start is not None:
                 periods.append([start, i, (ftype >> i - 1) & 1])
                 start = None
+
+        _ftype = (ftype >> i) & 1
 
     if start is not None:
         periods.append([start, 0, (ftype >> 23) & 1])
