@@ -1,20 +1,23 @@
-from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import (
     QFileDialog,
     QHeaderView,
-    QLineEdit,
-    QComboBox,
-    QMessageBox,
-    QSpinBox,
-    QMenu,
     QTableWidget,
     QPushButton,
-    QTreeWidgetItem,
     QWidget,
 )
-from enum import Enum
+
+from PyQt6.QtCore import QPointF
+
+from utils.utils_classes import (
+    ComboBox,
+    PopupMessage,
+    SpinBox,
+    TextEntry,
+    TreeItem,
+    Type,
+)
+
 from uuid import uuid4
-from copy import deepcopy
 import json
 import os
 
@@ -48,8 +51,6 @@ def parse(string, value=None):
 
 
 def table_fill_parent(table):
-    if not isinstance(table, QTableWidget):
-        return
     v_header = table.verticalHeader()
     h_header = table.horizontalHeader()
     if v_header is None or h_header is None:
@@ -66,16 +67,6 @@ def save_row(widget, dict, row):
     id = uuid4()
     widget.setObjectName(f"{id}")
     dict[f"{id}"] = row
-
-
-def intpday(day):
-    return ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"][
-        day
-    ]
-
-
-def daypint(day):
-    return {"lu": 0, "ma": 1, "me": 2, "je": 3, "ve": 4, "sa": 5, "di": 6}[day.lower()]
 
 
 def period_popup_error_code(error_list):
@@ -103,132 +94,6 @@ def insert_item_to_tree(tree, root, children):
     tree.insertTopLevelItems(0, [item])
 
 
-def intpftype(x: int):
-    return ["naturel", "synthétique"][x].title()
-
-
-def ftypepint(x: str):
-    return {"naturel": 0, "synthétique": 1}[x.lower()]
-
-
-class TextEntry(QLineEdit):
-    def __init__(self, placeholder):
-        super().__init__()
-        super().setPlaceholderText(placeholder)
-
-
-class ComboBox(QComboBox):
-    def __init__(self, items):
-        super().__init__()
-        super().addItems(items)
-
-
-class SpinBox(QSpinBox):
-    def __init__(self, min, max, value, step):
-        super().__init__()
-        super().setMinimum(min)
-        super().setMaximum(max)
-        super().setValue(value)
-        super().setSingleStep(step)
-
-
-class Menu(QMenu):
-    def __init__(self):
-        super().__init__()
-
-    def action(self, text_action: str, function):
-        action = super().addAction(text_action)
-        if action == None:
-            raise ValueError("Action is None")
-        action.triggered.connect(function)
-
-
-class Position(Enum):
-    BEFORE = 0
-    AFTER = 1
-
-
-class Type(Enum):
-    FIELDS = 0
-    TEAMS = 1
-
-
-class ButtonConnection:
-    def __init__(self, window, buttonName, function):
-        button = window.findChild(QPushButton, buttonName)
-        button.clicked.connect(function)
-
-
-class SpinBoxConnection:
-    def __init__(self, window, spinboxName, prefix, suffix):
-        self.spinbox = window.findChild(QSpinBox, spinboxName)
-        self.spinbox.setPrefix(f"{prefix} ")
-        self.spinbox.setSuffix(f" {suffix}")
-
-    def value(self):
-        return self.spinbox.value()
-
-
-class ActionMenuConnection:
-    def __init__(self, window, actionName, function):
-        action = window.findChild(QAction, actionName)
-        action.triggered.connect(function)
-
-
-class ComboBoxValue:
-    def __init__(self, window, comboBoxName):
-        self.combo_box = window.findChild(QComboBox, comboBoxName)
-
-    def index(self):
-        return self.combo_box.currentIndex()
-
-
-class PopupMessage(QMessageBox):
-    def __init__(self, message):
-        super().__init__()
-        super().setText(message)
-
-
-class YesOrNoMessage(QMessageBox):
-    def __init__(self, parent, message, accept, cancel):
-        super().__init__()
-        self.question(
-            parent, "", message, self.StandardButton.Yes | self.StandardButton.No
-        )
-        if self.StandardButton.Yes:
-            accept()
-        else:
-            cancel()
-
-
-class TreeItem(QTreeWidgetItem):
-    def __init__(self, root, children):
-        super().__init__(root)
-        for child in children:
-            super().addChild(QTreeWidgetItem(child))
-
-
-class Variables:
-    def __init__(self):
-        self.frows: list[str] = [
-            'TextEntry-["Nom"]',
-            'ComboBox-[["Naturel", "Synthétique"]]',
-            'Button-["Périodes"]',
-        ]
-
-        self.trows: list[str] = [
-            'TextEntry-["Nom"]',
-            'ComboBox-[["Terrain entier", "Demi terrain", "Quart de terrain"]]',
-            "SpinBox-[0, 100, 0, 1]",
-            'Button-["Périodes"]',
-        ]
-
-        self.ftable_headers = ["Identifiants", "Type", "Période"]
-        self.ttable_headers = ["Identifiants", "Portion", "Priorité", "Période"]
-
-        pass
-
-
 def dict_delete_row(dict, row):
     _keytodel = []
     widget_rows = dict
@@ -242,16 +107,24 @@ def dict_delete_row(dict, row):
         del widget_rows[key]
 
 
-def filePicker(canCreate=False):
-    dialog = QFileDialog(filter="*.json")
+def filePicker(canCreate=False, ext="JSON"):
     if canCreate:
-        dialog.setFileMode(QFileDialog.FileMode.AnyFile)
-        dialog.setAcceptMode(QFileDialog.AcceptMode.AcceptSave)
-    dialog.exec()
-    file = dialog.selectedFiles()[0]
-    if not os.path.isfile(file):
-        return None
-    return file
+        # Use getSaveFileName for non-existing files (save mode)
+        filename, _ = QFileDialog.getSaveFileName(
+            None,
+            "Save JSON File",
+            "",
+            f"{ext.capitalize()} Files (*.{ext})",
+        )
+    else:
+        # Use getOpenFileName for existing files (open mode)
+        filename, _ = QFileDialog.getOpenFileName(
+            None,
+            "Open JSON File",
+            "",
+            f"{ext.capitalize()} Files (*.{ext})",
+        )
+    return filename if filename != "" else None
 
 
 def savable_data(window, rows, prows):
@@ -300,3 +173,15 @@ def get_data(window, frows, trows, pdata):
                 break
             data[["fields", "teams"][type.value]].append(_data)
     return data
+
+
+def rectified_table_position(table: QTableWidget, position: QPointF):
+    _position = position.toPoint()
+    row, column = table.rowAt(_position.y()), table.columnAt(_position.x())
+    return row - row % 2, column
+
+
+def checkWidget(widget, expected):
+    if widget is None or not isinstance(widget, expected):
+        raise ValueError("Failed to check widget ")
+    return widget

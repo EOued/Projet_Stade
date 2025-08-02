@@ -8,10 +8,14 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.uic import loadUi
 
-from utils.utils import (
-    insert_item_to_tree,
+from utils.utils_classes import (
     ButtonConnection,
     SpinBoxConnection,
+)
+
+
+from utils.utils import (
+    insert_item_to_tree,
     period_popup_error_code,
 )
 

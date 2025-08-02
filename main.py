@@ -5,13 +5,13 @@ import os
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QApplication,
-    QMessageBox,
     QPushButton,
     QTableWidget,
 )
 from PyQt6.uic import loadUi
 from periods.period_opener import periods_popup
-from utils.utils import (
+
+from utils.utils_classes import (
     ActionMenuConnection,
     Menu,
     PopupMessage,
@@ -19,11 +19,14 @@ from utils.utils import (
     Type,
     Variables,
     YesOrNoMessage,
+)
+
+
+from utils.utils import (
     dict_delete_row,
     filePicker,
     get_data,
     parse,
-    savable_data,
     save_row,
     table_fill_parent,
     table_set_headers,
@@ -90,8 +93,8 @@ class MyApplication:
 
         self.filepath = filePicker()
         if self.filepath == None:
-            PopupMessage("Invalid file selected.")
             return
+
         data = None
         with open(self.filepath, "r") as f:
             data = json.load(f)
