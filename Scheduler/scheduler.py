@@ -26,7 +26,6 @@ class Scheduler(QDialog):
 
         self.table = CustomTable()
         self.table.loadData([])
-        #        table.loadData([{"content": "The High Five", "periods": 8388608}])
 
         self.myQMenuBar = QMenuBar()
         menu = self.myQMenuBar.addMenu("Fichier")
@@ -65,7 +64,7 @@ class Scheduler(QDialog):
         if self.filepath == None:
             return
 
-        if ".sched" not in self.filepath:
+        if self.filepath.split(".")[-1] != "sched":
             self.filepath += ".sched"
 
         with open(self.filepath, "r") as f:
@@ -82,8 +81,8 @@ class Scheduler(QDialog):
             self.filepath = filePicker(True, ext="sched")
             if self.filepath is None:
                 return
-            if ".sched" not in self.filepath:
-                self.filepath += ".sched"
+        if self.filepath.split(".")[-1] != "sched":
+            self.filepath += ".sched"
         data = self.table.extractData()
         with open(self.filepath, "w", encoding="utf-8") as f:
             _data = json.dumps(data, ensure_ascii=False, indent=4)

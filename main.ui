@@ -6,125 +6,104 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>981</width>
-    <height>764</height>
+    <width>893</width>
+    <height>686</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="iconSize">
+   <size>
+    <width>32</width>
+    <height>32</height>
+   </size>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout_2">
+   <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QTabWidget" name="tabWidget">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
       </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <widget class="QWidget" name="fields_tab">
-       <attribute name="title">
-        <string>Fields</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QTableWidget" name="fields_table">
+      <widget class="QLabel" name="label">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <family>URW Bookman</family>
+         <pointsize>22</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Gestionnaire d'équipe</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="scheduler">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="sizeAdjustPolicy">
-           <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
+          <property name="text">
+           <string/>
           </property>
-          <property name="showGrid">
-           <bool>true</bool>
+          <property name="icon">
+           <iconset>
+            <normalon>:/ressources/scheduler_icon.png</normalon>
+           </iconset>
           </property>
-          <property name="gridStyle">
-           <enum>Qt::PenStyle::SolidLine</enum>
+          <property name="iconSize">
+           <size>
+            <width>87</width>
+            <height>87</height>
+           </size>
           </property>
-          <property name="sortingEnabled">
-           <bool>false</bool>
+          <property name="autoRepeatInterval">
+           <number>100</number>
           </property>
-          <property name="wordWrap">
-           <bool>true</bool>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="perioder">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <property name="cornerButtonEnabled">
-           <bool>false</bool>
+          <property name="text">
+           <string/>
           </property>
-          <property name="rowCount">
-           <number>10</number>
-          </property>
-          <property name="columnCount">
-           <number>3</number>
-          </property>
-          <attribute name="horizontalHeaderCascadingSectionResizes">
-           <bool>false</bool>
-          </attribute>
-          <attribute name="horizontalHeaderHighlightSections">
-           <bool>true</bool>
-          </attribute>
-          <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-           <bool>false</bool>
-          </attribute>
-          <attribute name="horizontalHeaderStretchLastSection">
-           <bool>false</bool>
-          </attribute>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <column/>
-          <column/>
-          <column/>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="teams_tab">
-       <attribute name="title">
-        <string>Teams</string>
-       </attribute>
-       <layout class="QGridLayout" name="gridLayout_3">
-        <item row="0" column="0">
-         <widget class="QTableWidget" name="teams_table">
-          <property name="rowCount">
-           <number>10</number>
-          </property>
-          <property name="columnCount">
-           <number>4</number>
-          </property>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <column/>
-          <column/>
-          <column/>
-          <column/>
-         </widget>
-        </item>
-       </layout>
+      <widget class="QLabel" name="label_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>V1.0.1</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing</set>
+       </property>
       </widget>
      </widget>
     </item>
@@ -135,43 +114,15 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>981</width>
+     <width>893</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>Fichier</string>
-    </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSave"/>
-    <addaction name="actionSave_as"/>
-    <addaction name="actionExecute"/>
-   </widget>
-   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
-   <property name="text">
-    <string>Ouvrir</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Enregistrer</string>
-   </property>
-  </action>
-  <action name="actionSave_as">
-   <property name="text">
-    <string>Enregistrer sous...</string>
-   </property>
-  </action>
-  <action name="actionExecute">
-   <property name="text">
-    <string>Exécuter</string>
-   </property>
-  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="ressources.qrc"/>
+ </resources>
  <connections/>
 </ui>
