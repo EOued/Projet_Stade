@@ -26,6 +26,7 @@ class PeriodsUI:
         loaded_content: dict[str, list[list]] = {},
         insertion_function=lambda _: _,
         disabled=[],
+        names=[],
     ):
         ui_file_path = "periods/periods.ui"
         self.window = loadUi(ui_file_path)
@@ -41,6 +42,7 @@ class PeriodsUI:
             | Qt.WindowType.FramelessWindowHint  # No title bar
         )
         # disable widgets
+        self.disabled = disabled
         for _disabled in disabled:
             widget = self.window.findChild(QWidget, _disabled)
             if widget is not None:
@@ -58,12 +60,24 @@ class PeriodsUI:
 
         self.tree = self.window.findChild(QTreeWidget, "treeWidget")
         self.tree.header().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
+        for index, name in enumerate(names):
+            self.tree.headerItem().setText(index + 1, name)
 
         ButtonConnection(self.window, "add", self.process_add_click)
         ButtonConnection(self.window, "del", self.deleting)
 
-        self.sb_start = SpinBoxConnection(self.window, "start", "Début:", "heure")
-        self.sb_end = SpinBoxConnection(self.window, "end", "Fin:", "heure")
+        self.sb_start = SpinBoxConnection(
+            self.window,
+            "start",
+            names[0] if "start" not in self.disabled else "",
+            "heure(s)",
+        )
+        self.sb_end = SpinBoxConnection(
+            self.window,
+            "end",
+            names[1] if "end" not in self.disabled else "",
+            "heure(s)",
+        )
 
         self.displayed_data = loaded_content
 
@@ -94,10 +108,13 @@ class PeriodsUI:
         for root in roots:
             if root not in self.displayed_data:
                 self.displayed_data[root] = []
-            checker_ecode = self.check_adding(items[0], items[1], root)
-            if checker_ecode > 0:
-                error_list.append((root, checker_ecode))
-                continue
+            if "start" not in self.disabled and "end" not in self.disabled:
+                # Checking if time period is valid (works iif start/end not disabled)
+                checker_ecode = self.check_adding(items[0], items[1], root)
+                if checker_ecode > 0:
+                    error_list.append((root, checker_ecode))
+                    continue
+            print(items)
             self.displayed_data[root].append([""] + items)
         self.update_data()
         period_popup_error_code(error_list)

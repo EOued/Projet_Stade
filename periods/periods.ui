@@ -52,21 +52,6 @@
         <string>Jours</string>
        </property>
       </column>
-      <column>
-       <property name="text">
-        <string>Début</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Fin</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Type</string>
-       </property>
-      </column>
      </widget>
      <widget class="QFrame" name="days">
       <property name="frameShape">

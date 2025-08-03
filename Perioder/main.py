@@ -38,9 +38,11 @@ class MyApplication(QApplication):
         if self.window is None:
             raise ValueError("Window is not initialized")
 
-        ActionMenuConnection(self.window, "actionOpen", self.load_file)
-        ActionMenuConnection(self.window, "actionSave", self.save_file)
-        ActionMenuConnection(self.window, "actionSave_as", self.save_as_file)
+        ActionMenuConnection(self.window, "actionOpen", lambda _: self.load_file())
+        ActionMenuConnection(self.window, "actionSave", lambda _: self.save_file())
+        ActionMenuConnection(
+            self.window, "actionSave_as", lambda _: self.save_as_file()
+        )
 
         self.context_menu = Menu()
         self.context_menu.action(
@@ -89,9 +91,11 @@ class MyApplication(QApplication):
                 lambda _: _,
             )
 
-        self.filepath = filePicker()
+        self.filepath = filePicker(ext="prd")
         if self.filepath == None:
             return
+        if self.filepath.split(".")[-1] != "prd":
+            self.filepath += ".prd"
 
         data = None
         with open(self.filepath, "r") as f:
@@ -126,9 +130,11 @@ class MyApplication(QApplication):
 
     def save_file(self):
         if self.filepath is None or not os.path.isfile(self.filepath):
-            self.filepath = filePicker(True)
+            self.filepath = filePicker(True, ext="prd")
             if self.filepath is None:
                 return
+        if self.filepath.split(".")[-1] != "prd":
+            self.filepath += ".prd"
 
         data = get_data(self.window, self._frows, self._trows, self.pdata)
         with open(self.filepath, "w", encoding="utf-8") as f:

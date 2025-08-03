@@ -68,12 +68,15 @@ class Scheduler(QDialog):
             self.filepath += ".sched"
 
         with open(self.filepath, "r") as f:
+            content = f.read()
             self.table.loadData(
                 json.loads(
-                    zlib.decompress(base64.b64decode(f.read().encode("utf-8"))).decode(
+                    zlib.decompress(base64.b64decode(content.encode("utf-8"))).decode(
                         "utf-8"
                     )
                 )
+                if content
+                else []
             )
 
     def save_file(self):

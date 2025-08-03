@@ -5,7 +5,7 @@ from periods.periods import PeriodsUI
 
 def retrieve_data_teams(dict, uuid):
     if uuid not in dict:
-        dict[uuid] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+        dict[uuid] = [[], [], [], [], [], [], []]
     return dict[uuid]
 
 
@@ -16,7 +16,7 @@ def retrieve_data_fields(dict, uuid):
 
 
 def reset_data_teams(dict, uuid):
-    dict[uuid] = [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]
+    dict[uuid] = [[], [], [], [], [], [], []]
     return dict[uuid]
 
 
@@ -36,26 +36,12 @@ def xor_period(start_hour, end_hour, ftype, day, saved_data):
 
 
 def teams_data_parsing(displayed_data, saved_data):
+    days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
     for day, elements in displayed_data.items():
         for element in elements:
-            start = int(element[1].split("h")[0])
-            end = int(element[2].split("h")[0])
-            ftype = ["Naturel", "Synthétique"].index(element[3])
-            xor_period(
-                start,
-                end,
-                ftype,
-                [
-                    "Lundi",
-                    "Mardi",
-                    "Mercredi",
-                    "Jeudi",
-                    "Vendredi",
-                    "Samedi",
-                    "Dimanche",
-                ].index(day),
-                saved_data,
-            )
+            duration = int(element[1].split("h")[0])
+            ftype = ["Naturel", "Synthétique"].index(element[2])
+            saved_data[days.index(day)].append([duration, ftype])
 
 
 def fields_data_parsing(displayed_data, saved_data):
@@ -84,7 +70,7 @@ def teams_data_loading(data):
     ret_data = {}
     days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
     for day, elements in enumerate(data):
-        for element in int_to_time_periods(*elements):
+        for element in elements:
             if element == []:
                 continue
             if days[day] not in ret_data:
@@ -93,8 +79,7 @@ def teams_data_loading(data):
                 [
                     "",
                     f"{element[0]}h",
-                    f"{element[1]}h",
-                    ["Naturel", "Synthétique"][element[2]],
+                    ["Naturel", "Synthétique"][element[1]],
                 ]
             )
     return ret_data
@@ -187,16 +172,10 @@ def periods_teams_adder(days, elements):
         if day.objectName() in ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
     ]
 
-    start = [
+    duration = [
         elem.value()
         for elem in elements
         if isinstance(elem, QSpinBox) and elem.objectName() == "start"
-    ][0]
-
-    end = [
-        elem.value()
-        for elem in elements
-        if isinstance(elem, QSpinBox) and elem.objectName() == "end"
     ][0]
 
     ftype = [
@@ -219,7 +198,7 @@ def periods_teams_adder(days, elements):
         if checkboxes[index]:
             days.append(day)
 
-    return days, [f"{start}h", f"{end}h", ftype]
+    return days, [f"{duration}h", ftype]
 
 
 def periods_popup(uuid, data, type: Type):
@@ -227,7 +206,8 @@ def periods_popup(uuid, data, type: Type):
     popup = PeriodsUI(
         [fields_data_loading, teams_data_loading][type.value](__data),
         [periods_fields_adder, periods_teams_adder][type.value],
-        [["type_combo"], []][type.value],
+        [["type_combo"], ["end"]][type.value],
+        [["Début", "Fin"], ["Durée", "Type"]][type.value],
     )
     if popup.window is None:
         return
