@@ -97,6 +97,11 @@ class MyApplication:
         connection.parse_fields(current_data["fields"])
         connection.parse_teams(current_data["teams"])
         unfitted = connection.fit()
+        unfitted_text = ""
+        for unfit in unfitted:
+            unfitted_text += "La période suivante n'a pas pu être ajoutée:\n"
+            unfitted_text += f"\tÉquipe: {unfit[0]}\n\tJour: {Variables().days[unfit[1]]}\n\tDurée: {unfit[2]}\n\tType de terrain: {['Naturel', 'Synthétique'][unfit[3]]}\n"
+        PopupMessage(unfitted_text).exec()
         if self.filepath is None:
             YesOrNoMessage(
                 self.window,
@@ -249,8 +254,10 @@ class MyApplication:
         row = self.get_widget_row()
         _table.removeRow(row)
         dict_delete_row(self.get_rows(), row)
-        if max(_rows.values()) + 1 < 10:
+        if _rows == {} or max(_rows.values()) + 1 < 10:
             _table.insertRow(_table.rowCount())
+        if _rows == {}:
+            self.set_row(0)
         table_fill_parent(_table)
 
     def insert_row(self, pos: Position):
