@@ -25,6 +25,7 @@ class PeriodsUI:
         self,
         loaded_content: dict[str, list[list]] = {},
         insertion_function=lambda _: _,
+        check_function=lambda _: "",
         disabled=[],
         names=[],
     ):
@@ -34,6 +35,7 @@ class PeriodsUI:
             return
 
         self.insertion_function = insertion_function
+        self.check_function = check_function
 
         self.window.setWindowFlags(
             Qt.WindowType.Tool  # Hides from taskbar (optional)
@@ -84,18 +86,6 @@ class PeriodsUI:
         self.update_data()
         self.window.show()
 
-    def check_adding(self, start, end, day):
-        if end <= start:
-            return 1  # Invalid period
-        for period in self.displayed_data[day]:
-            _start = period[0]
-            _end = period[1]
-            if _start == start and _end == end:
-                return 3  # Duplicate
-            if _start <= start < _end or _start < end <= _end:
-                return 2  # Overlapping
-        return 0
-
     def process_add_click(self):
         if self.window is None:
             return
@@ -108,13 +98,11 @@ class PeriodsUI:
         for root in roots:
             if root not in self.displayed_data:
                 self.displayed_data[root] = []
-            if "start" not in self.disabled and "end" not in self.disabled:
-                # Checking if time period is valid (works iif start/end not disabled)
-                checker_ecode = self.check_adding(items[0], items[1], root)
-                if checker_ecode > 0:
-                    error_list.append((root, checker_ecode))
-                    continue
-            print(items)
+            # Checking if time period is valid (works iif start/end not disabled)
+            checker_ecode = self.check_function(root, items, self.displayed_data)
+            if checker_ecode != "":
+                error_list.append((root, checker_ecode))
+                continue
             self.displayed_data[root].append([""] + items)
         self.update_data()
         period_popup_error_code(error_list)

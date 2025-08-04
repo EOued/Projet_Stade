@@ -1,6 +1,6 @@
 import json
-import sys
 import os
+import base64, zlib
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -9,11 +9,14 @@ from PyQt6.QtWidgets import (
     QTableWidget,
 )
 from PyQt6.uic.load_ui import loadUi
+from Perioder.scheduler_popup import SchedulerPopup
 from periods.period_opener import periods_popup
 
+from python_core.field import FitType
 from utils.utils_classes import (
     ActionMenuConnection,
     Menu,
+    PopupMessage,
     Position,
     Type,
     Variables,
@@ -26,23 +29,26 @@ from utils.utils import (
     filePicker,
     get_data,
     parse,
+    save_file,
     save_row,
     table_fill_parent,
     table_set_headers,
 )
 
 
-class MyApplication(QApplication):
+from python_core.connector import Connector
+
+
+class MyApplication:
     def __init__(self):
         self.window = loadUi("Perioder/perioder.ui")
         if self.window is None:
             raise ValueError("Window is not initialized")
 
-        ActionMenuConnection(self.window, "actionOpen", lambda _: self.load_file())
-        ActionMenuConnection(self.window, "actionSave", lambda _: self.save_file())
-        ActionMenuConnection(
-            self.window, "actionSave_as", lambda _: self.save_as_file()
-        )
+        ActionMenuConnection(self.window, "actionOpen", self.load_file)
+        ActionMenuConnection(self.window, "actionSave", self.save_file)
+        ActionMenuConnection(self.window, "actionSave_as", self.save_as_file)
+        ActionMenuConnection(self.window, "actionExecute", self.execute)
 
         self.context_menu = Menu()
         self.context_menu.action(
@@ -66,6 +72,7 @@ class MyApplication(QApplication):
         self._trows: dict[str, int] = {}
 
         self.init_data = {"fields": [[["", 0], []]], "teams": [[["", 0, 0], []]]}
+        self.default_data = {"fields": [[["", 0], []]], "teams": [[["", 0, 0], []]]}
         self.pdata = {}
         self.type: Type = Type.FIELDS
         self.window.show()
@@ -80,6 +87,48 @@ class MyApplication(QApplication):
             table = self.get_table()
             table_fill_parent(table)
             self.set_row(0)
+
+    def execute(self):
+        current_data = get_data(self.window, self._frows, self._trows, self.pdata)
+        if current_data == self.default_data:
+            PopupMessage("Aucune donnée n'a été entrée : exécution stoppée.").exec()
+            return
+        connection = Connector()
+        connection.parse_fields(current_data["fields"])
+        connection.parse_teams(current_data["teams"])
+        unfitted = connection.fit()
+        if self.filepath is None:
+            YesOrNoMessage(
+                self.window,
+                f"Les données n'ont pas été enregistrées : le résultat de l'exécution ne le sera pas non plus. Voulez-vous continuer ?",
+                lambda _: _,
+                self.save_file,
+            )
+        if self.filepath is None:
+            dirname = ""
+            message = "Les fichiers ne seront pas enregistrés."
+        else:
+            dirname = os.path.dirname(self.filepath)
+            path = f"{dirname}/{os.path.basename(self.filepath.split('.')[0])}_sched"
+            message = f"Les fichiers ont étés enregistrés sous {path}."
+            if not os.path.exists(path):
+                os.makedirs(path)
+            for fit in FitType:
+                connection.set_fit_type(fit)
+                for field in connection.get_field_list():
+                    data = connection.get_teams_from_field(field)
+                    save_file(f"{path}/{fit.name}_{field}_field.sched", data)
+
+                for team in connection.get_team_list():
+                    data = connection.get_fields_from_team(team)
+                    save_file(f"{path}/{fit.name}_{team}_team.sched", data)
+
+        YesOrNoMessage(
+            self.window,
+            f"Le programme a été exécuté. {message} Voulez-vous voir le résultat de l'exécution ?",
+            lambda _: SchedulerPopup(connection).exec(),
+            lambda _: _,
+        )
 
     def load_file(self):
         current_data = get_data(self.window, self._frows, self._trows, self.pdata)

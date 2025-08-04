@@ -27,7 +27,7 @@ class MainUI:
         perioder_button.setIcon(QIcon("ressources/perioder_icon.png"))
         perioder_button.setIconSize(0.5 * QSize(520, 440))
         perioder_button.setStyleSheet("padding: 0px;")
-        perioder_button.clicked.connect(lambda _: MyApplication().exec())
+        perioder_button.clicked.connect(lambda _: MyApplication())
 
     def run(self):
         sys.exit(self.app.exec())

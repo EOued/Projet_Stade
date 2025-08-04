@@ -201,11 +201,31 @@ def periods_teams_adder(days, elements):
     return days, [f"{duration}h", ftype]
 
 
+def fields_check_function(root, items, displayed_data):
+    start = int(items[0].split("h")[0])
+    end = int(items[1].split("h")[0])
+    if end <= start:
+        return f"{root}: La période {items[0]}-{items[1]} est invalide."
+    for period in displayed_data[root]:
+        _start = int(period[1].split("h")[0])
+        _end = int(period[2].split("h")[0])
+        if _start == start and _end == end:
+            return f"{root}: Duplicata de la période {items[0]}-{items[1]}."
+        if _start <= start < _end or _start < end <= _end:
+            return f"{root}: La période {items[0]}-{items[1]} interfère avec la période {period[1]}-{period[2]}."
+    return ""
+
+
+def teams_check_function(_, _2, _3):
+    return ""
+
+
 def periods_popup(uuid, data, type: Type):
     __data = [retrieve_data_fields, retrieve_data_teams][type.value](data, uuid)
     popup = PeriodsUI(
         [fields_data_loading, teams_data_loading][type.value](__data),
         [periods_fields_adder, periods_teams_adder][type.value],
+        [fields_check_function, teams_check_function][type.value],
         [["type_combo"], ["end"]][type.value],
         [["Début", "Fin"], ["Durée", "Type"]][type.value],
     )

@@ -108,17 +108,20 @@ class CustomTable(QTableWidget):
 
     def loadData(self, data):
         for column, day in enumerate(data):
-            if day == {}:
-                content = ""
-                periods = 0
-            else:
-                content = list(day.keys())[0]
-                periods = list(day.values())[0]
+            # Clearing
             for row in range(24):
                 widget = checkWidget(
                     self.cellWidget(2 + 2 * row, 2 + column), DragLabel
                 )
-                widget.setText(content if (periods >> row) & 1 else "")
+                widget.setText("")
+
+            for content, periods in day.items():
+                for row in range(24):
+                    widget = checkWidget(
+                        self.cellWidget(2 + 2 * row, 2 + column), DragLabel
+                    )
+                    if (periods >> row) & 1:
+                        widget.setText(content)
 
     def extractData(self):
         data = []

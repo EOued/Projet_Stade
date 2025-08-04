@@ -21,6 +21,8 @@ from uuid import uuid4
 import json
 import os
 
+import base64, zlib
+
 
 def parse(string, value=None):
     widget = None
@@ -71,18 +73,10 @@ def save_row(widget, dict, row):
 
 def period_popup_error_code(error_list):
     error_message = ""
-    for day, errorcode in error_list:
-        if errorcode == 0:
+    for day, _error_message in error_list:
+        if _error_message == "":
             continue
-        error_message += (
-            f"La période créée pour le {day} "
-            + [
-                f"est invalide",
-                f"interfère avec une autre",
-                f"existe déjà",
-            ][errorcode - 1]
-            + ": la période n'a pas été ajoutée.\n"
-        )
+        error_message += f"{_error_message}\n"
     if error_message != "":
         PopupMessage(error_message).exec()
 
@@ -185,3 +179,9 @@ def checkWidget(widget, expected):
     if widget is None or not isinstance(widget, expected):
         raise ValueError("Failed to check widget ")
     return widget
+
+
+def save_file(path, data):
+    with open(path, "w", encoding="utf-8") as f:
+        _data = json.dumps(data, ensure_ascii=False, indent=4)
+        f.write(base64.b64encode(zlib.compress(_data.encode("utf-8"))).decode("utf-8"))
