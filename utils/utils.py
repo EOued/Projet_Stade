@@ -1,3 +1,4 @@
+import zipfile
 from PyQt6.QtWidgets import (
     QFileDialog,
     QHeaderView,
@@ -8,6 +9,7 @@ from PyQt6.QtWidgets import (
 
 from PyQt6.QtCore import QPointF
 
+from python_core.field import FitType
 from utils.utils_classes import (
     ComboBox,
     PopupMessage,
@@ -181,7 +183,65 @@ def checkWidget(widget, expected):
     return widget
 
 
+def load_file(path, fallback=None):
+    with open(path, "r") as f:
+        content = f.read()
+        return (
+            json.loads(
+                zlib.decompress(base64.b64decode(content.encode("utf-8"))).decode(
+                    "utf-8"
+                )
+            )
+            if content
+            else fallback
+        )
+
+
+def encode_string(data: bytes):
+    return base64.b64encode(zlib.compress(data)).decode("utf-8")
+
+
+def decode_string(data: bytes):
+    return zlib.decompress(base64.b64decode(data)).decode("utf-8")
+
+
 def save_file(path, data):
     with open(path, "w", encoding="utf-8") as f:
         _data = json.dumps(data, ensure_ascii=False, indent=4)
         f.write(base64.b64encode(zlib.compress(_data.encode("utf-8"))).decode("utf-8"))
+
+
+def filename_from_metadata(metadata: dict):
+    if not metadata["is_schedule"]:
+        filename = "FT"
+    else:
+        filename = f"{FitType(metadata['fit_type']).name}_{metadata['name']}_{'team' if metadata['is_team'] else 'field'}"
+    return filename
+
+
+def get_from_sched_file(path, metadata: dict):
+    filename = filename_from_metadata(metadata)
+    with zipfile.ZipFile(path, "r") as zip:
+        if filename not in zip.namelist():
+            return None
+        with zip.open(filename) as file:
+            return file.read()
+
+
+def add_to_sched_file(path: str, metadata: dict, data):
+    filename = filename_from_metadata(metadata)
+    _files, _content = [], []
+    if os.path.exists(path):
+        with zipfile.ZipFile(path, "r") as zipped_f:
+            for file in zipped_f.namelist():
+                if file == filename:
+                    continue
+                with zipped_f.open(file) as f:
+                    _files.append(file)
+                    _content.append(f.read())
+
+    with zipfile.ZipFile(path, "w") as zipped_f:
+        for file, content in zip(_files, _content):
+            zipped_f.writestr(file, content)
+
+        zipped_f.writestr(filename, data)

@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 
 from Scheduler.table import CustomTable
-from utils.utils import filePicker
+from utils.utils import filePicker, load_file, save_file
 from utils.utils_classes import PopupMessage, YesOrNoMessage
 
 
@@ -66,18 +66,7 @@ class Scheduler(QDialog):
 
         if self.filepath.split(".")[-1] != "sched":
             self.filepath += ".sched"
-
-        with open(self.filepath, "r") as f:
-            content = f.read()
-            self.table.loadData(
-                json.loads(
-                    zlib.decompress(base64.b64decode(content.encode("utf-8"))).decode(
-                        "utf-8"
-                    )
-                )
-                if content
-                else []
-            )
+        self.table.loadData(load_file(self.filepath, []))
 
     def save_file(self):
         if self.filepath is None or not os.path.isfile(self.filepath):
@@ -87,11 +76,7 @@ class Scheduler(QDialog):
         if self.filepath.split(".")[-1] != "sched":
             self.filepath += ".sched"
         data = self.table.extractData()
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            _data = json.dumps(data, ensure_ascii=False, indent=4)
-            f.write(
-                base64.b64encode(zlib.compress(_data.encode("utf-8"))).decode("utf-8")
-            )
+        save_file(self.filepath, data)
 
     def save_as_file(self):
         temp = self.filepath

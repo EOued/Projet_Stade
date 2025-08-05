@@ -25,9 +25,13 @@ from utils.utils_classes import (
 
 
 from utils.utils import (
+    add_to_sched_file,
+    decode_string,
     dict_delete_row,
+    encode_string,
     filePicker,
     get_data,
+    get_from_sched_file,
     parse,
     save_file,
     save_row,
@@ -145,18 +149,17 @@ class MyApplication:
                 lambda _: _,
             )
 
-        self.filepath = filePicker(ext="prd")
+        self.filepath = filePicker(ext="sched")
         if self.filepath == None:
             return
-        if self.filepath.split(".")[-1] != "prd":
-            self.filepath += ".prd"
+        if self.filepath.split(".")[-1] != "sched":
+            self.filepath += ".sched"
 
-        data = None
-        with open(self.filepath, "r") as f:
-            data = json.load(f)
+        data = get_from_sched_file(self.filepath, {"is_schedule": False})
 
         if data is None:
             return
+        data = json.loads(decode_string(data))
 
         self.init_data = data
 
@@ -184,15 +187,18 @@ class MyApplication:
 
     def save_file(self):
         if self.filepath is None or not os.path.isfile(self.filepath):
-            self.filepath = filePicker(True, ext="prd")
+            self.filepath = filePicker(True, ext="sched")
             if self.filepath is None:
                 return
-        if self.filepath.split(".")[-1] != "prd":
-            self.filepath += ".prd"
+        if self.filepath.split(".")[-1] != "sched":
+            self.filepath += ".sched"
 
         data = get_data(self.window, self._frows, self._trows, self.pdata)
-        with open(self.filepath, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        add_to_sched_file(
+            self.filepath,
+            {"is_schedule": False},
+            encode_string(json.dumps(data, ensure_ascii=False)),
+        )
 
     def get_rows(self):
         return [self._frows, self._trows][self.type.value]
