@@ -20,7 +20,6 @@ from utils.utils_classes import (
     Position,
     Type,
     Variables,
-    YesOrNoMessage,
 )
 
 
@@ -37,6 +36,7 @@ from utils.utils import (
     save_row,
     table_fill_parent,
     table_set_headers,
+    yes_or_no,
 )
 
 
@@ -107,8 +107,8 @@ class MyApplication:
             unfitted_text += f"\tÉquipe: {unfit[0]}\n\tJour: {Variables().days[unfit[1]]}\n\tDurée: {unfit[2]}\n\tType de terrain: {['Naturel', 'Synthétique'][unfit[3]]}\n"
         PopupMessage(unfitted_text).exec()
         if self.filepath is None:
-            YesOrNoMessage(
-                self.window,
+            yes_or_no(
+                self,
                 f"Les données n'ont pas été enregistrées : le résultat de l'exécution ne le sera pas non plus. Voulez-vous continuer ?",
                 lambda _: _,
                 self.save_file,
@@ -132,8 +132,8 @@ class MyApplication:
                     data = connection.get_fields_from_team(team)
                     save_file(f"{path}/{fit.name}_{team}_team.sched", data)
 
-        YesOrNoMessage(
-            self.window,
+        yes_or_no(
+            self,
             f"Le programme a été exécuté. {message} Voulez-vous voir le résultat de l'exécution ?",
             lambda _: SchedulerPopup(connection).exec(),
             lambda _: _,
@@ -142,8 +142,8 @@ class MyApplication:
     def load_file(self):
         current_data = get_data(self.window, self._frows, self._trows, self.pdata)
         if current_data != self.init_data:
-            YesOrNoMessage(
-                self.window,
+            yes_or_no(
+                self,
                 "This file have been modified. Save it ?",
                 self.save_file,
                 lambda _: _,
@@ -197,7 +197,7 @@ class MyApplication:
         add_to_sched_file(
             self.filepath,
             {"is_schedule": False},
-            encode_string(json.dumps(data, ensure_ascii=False)),
+            encode_string(json.dumps(data, ensure_ascii=False).encode("utf-8")),
         )
 
     def get_rows(self):

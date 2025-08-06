@@ -2,6 +2,7 @@ import zipfile
 from PyQt6.QtWidgets import (
     QFileDialog,
     QHeaderView,
+    QMessageBox,
     QTableWidget,
     QPushButton,
     QWidget,
@@ -234,6 +235,7 @@ def add_to_sched_file(path: str, metadata: dict, data):
     if os.path.exists(path):
         with zipfile.ZipFile(path, "r") as zipped_f:
             for file in zipped_f.namelist():
+                print(file, filename, file == filename)
                 if file == filename:
                     continue
                 with zipped_f.open(file) as f:
@@ -245,3 +247,27 @@ def add_to_sched_file(path: str, metadata: dict, data):
             zipped_f.writestr(file, content)
 
         zipped_f.writestr(filename, data)
+
+
+def make_metadata(is_schedule, fit_type, is_team, name):
+    return {
+        "is_schedule": is_schedule,
+        "fit_type": fit_type,
+        "is_team": is_team,
+        "name": name,
+    }
+
+
+def yes_or_no(parent, message, accept, cancel):
+    qm = QMessageBox
+    ret = qm.question(
+        parent,
+        "",
+        message,
+        QMessageBox.StandardButton.Yes,
+        QMessageBox.StandardButton.No,
+    )
+    if ret == qm.StandardButton.Yes:
+        accept(None)
+    else:
+        cancel(None)

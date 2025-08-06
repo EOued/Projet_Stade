@@ -94,18 +94,6 @@ class PopupMessage(QMessageBox):
         super().setText(message)
 
 
-class YesOrNoMessage(QMessageBox):
-    def __init__(self, parent, message, accept, cancel):
-        super().__init__()
-        ret = self.question(
-            parent, "", message, self.StandardButton.Yes | self.StandardButton.No
-        )
-        if ret == self.StandardButton.Yes:
-            accept(None)
-        else:
-            cancel(None)
-
-
 class TreeItem(QTreeWidgetItem):
     def __init__(self, root, children):
         super().__init__(root)
@@ -140,7 +128,8 @@ class Variables:
             "Samedi",
             "Dimanche",
         ]
-        pass
+
+        self.fittype = ["FIRST_FIT", "BEST_FIT", "WORST_FIT"]
 
 
 class Label(QLabel):
