@@ -26,7 +26,7 @@ import os
 
 
 class Scheduler(QDialog):
-    def __init__(self):
+    def __init__(self, filepath=None):
         super().__init__()
         self.setWindowFlags(
             Qt.WindowType.Tool
@@ -75,10 +75,13 @@ class Scheduler(QDialog):
         layout.addWidget(self.table)
         self.setLayout(layout)
 
-        self.filepath = None
+        self.filepath = filepath
         self.data = {}
         self.initial_data = {}
         self.current_key = None
+
+        if self.filepath is not None:
+            self.load_file(self.filepath)
 
     def TF_BOX(self):
         self.update_combobox()
@@ -133,7 +136,7 @@ class Scheduler(QDialog):
         self.name_box.clear()
         self.name_box.addItems(filenames)
 
-    def load_file(self):
+    def load_file(self, path=None):
         if self.current_key is not None:
             self.data[self.current_key] = self.table.extractData()
         if self.data != self.initial_data:
@@ -143,8 +146,10 @@ class Scheduler(QDialog):
                 self.save_file,
                 lambda _: _,
             )
-
-        self.filepath = filePicker(ext="sched")
+        if path is None:
+            self.filepath = filePicker(ext="sched")
+        else:
+            self.filepath = path
         if self.filepath == None:
 
             return
@@ -163,7 +168,6 @@ class Scheduler(QDialog):
         if self.filepath.split(".")[-1] != "sched":
             self.filepath += ".sched"
 
-        print(self.current_key)
         if self.current_key is not None:
             self.data[self.current_key] = self.table.extractData()
 

@@ -1,3 +1,4 @@
+from copy import deepcopy
 import json
 import os
 import base64, zlib
@@ -10,6 +11,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.uic.load_ui import loadUi
 from Perioder.scheduler_popup import SchedulerPopup
+from Scheduler.scheduler import Scheduler
 from periods.period_opener import periods_popup
 
 from python_core.field import FitType
@@ -31,6 +33,7 @@ from utils.utils import (
     filePicker,
     get_data,
     get_from_sched_file,
+    make_metadata,
     parse,
     save_file,
     save_row,
@@ -65,7 +68,7 @@ class MyApplication:
         )
         self.context_menu.action("Supprimer cette ligne", self.delete_current_row)
 
-        self.filepath = ""
+        self.filepath = None
 
         self.ftable: QTableWidget = self.window.findChild(QTableWidget, "fields_table")
         self.ttable: QTableWidget = self.window.findChild(QTableWidget, "teams_table")
@@ -97,45 +100,45 @@ class MyApplication:
         if current_data == self.default_data:
             PopupMessage("Aucune donnée n'a été entrée : exécution stoppée.").exec()
             return
+        if self.filepath is None:
+            PopupMessage(
+                "Merci d'enregistrer les données avant de lancer l'exécution."
+            ).exec()
+            return
+
         connection = Connector()
-        connection.parse_fields(current_data["fields"])
-        connection.parse_teams(current_data["teams"])
+        connection.parse_fields(deepcopy(current_data["fields"]))
+        connection.parse_teams(deepcopy(current_data["teams"]))
         unfitted = connection.fit()
         unfitted_text = ""
         for unfit in unfitted:
             unfitted_text += "La période suivante n'a pas pu être ajoutée:\n"
             unfitted_text += f"\tÉquipe: {unfit[0]}\n\tJour: {Variables().days[unfit[1]]}\n\tDurée: {unfit[2]}\n\tType de terrain: {['Naturel', 'Synthétique'][unfit[3]]}\n"
-        PopupMessage(unfitted_text).exec()
-        if self.filepath is None:
-            yes_or_no(
-                self,
-                f"Les données n'ont pas été enregistrées : le résultat de l'exécution ne le sera pas non plus. Voulez-vous continuer ?",
-                lambda _: _,
-                self.save_file,
-            )
-        if self.filepath is None:
-            dirname = ""
-            message = "Les fichiers ne seront pas enregistrés."
-        else:
-            dirname = os.path.dirname(self.filepath)
-            path = f"{dirname}/{os.path.basename(self.filepath.split('.')[0])}_sched"
-            message = f"Les fichiers ont étés enregistrés sous {path}."
-            if not os.path.exists(path):
-                os.makedirs(path)
-            for fit in FitType:
-                connection.set_fit_type(fit)
-                for field in connection.get_field_list():
-                    data = connection.get_teams_from_field(field)
-                    save_file(f"{path}/{fit.name}_{field}_field.sched", data)
+        if unfitted != []:
+            PopupMessage(unfitted_text).exec()
 
-                for team in connection.get_team_list():
-                    data = connection.get_fields_from_team(team)
-                    save_file(f"{path}/{fit.name}_{team}_team.sched", data)
+        for fit in FitType:
+            connection.set_fit_type(fit)
+            for field in connection.get_field_list():
+                data = connection.get_teams_from_field(field)
+                add_to_sched_file(
+                    self.filepath,
+                    make_metadata(True, fit.value, False, field),
+                    encode_string(json.dumps(data, ensure_ascii=False).encode("utf-8")),
+                )
+
+            for team in connection.get_team_list():
+                data = connection.get_fields_from_team(team)
+                add_to_sched_file(
+                    self.filepath,
+                    make_metadata(True, fit.value, True, team),
+                    encode_string(json.dumps(data, ensure_ascii=False).encode("utf-8")),
+                )
 
         yes_or_no(
-            self,
-            f"Le programme a été exécuté. {message} Voulez-vous voir le résultat de l'exécution ?",
-            lambda _: SchedulerPopup(connection).exec(),
+            self.window,
+            f"Le programme a été exécuté. Voulez-vous voir l'agencement des équipes ?",
+            lambda _: Scheduler(self.filepath).exec(),
             lambda _: _,
         )
 
@@ -143,7 +146,7 @@ class MyApplication:
         current_data = get_data(self.window, self._frows, self._trows, self.pdata)
         if current_data != self.init_data:
             yes_or_no(
-                self,
+                self.window,
                 "This file have been modified. Save it ?",
                 self.save_file,
                 lambda _: _,
@@ -161,7 +164,7 @@ class MyApplication:
             return
         data = json.loads(decode_string(data))
 
-        self.init_data = data
+        self.init_data = deepcopy(data)
 
         for table, rows, string, type in [
             (self.ttable, self._trows, "teams", Type.TEAMS),
@@ -194,6 +197,7 @@ class MyApplication:
             self.filepath += ".sched"
 
         data = get_data(self.window, self._frows, self._trows, self.pdata)
+        self.init_data = deepcopy(data)
         add_to_sched_file(
             self.filepath,
             {"is_schedule": False},

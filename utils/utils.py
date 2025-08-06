@@ -231,16 +231,20 @@ def get_from_sched_file(path, metadata: dict):
 
 def add_to_sched_file(path: str, metadata: dict, data):
     filename = filename_from_metadata(metadata)
+    if filename == "FT":
+        print("MODIFIED FT")
     _files, _content = [], []
+    if not zipfile.is_zipfile(path):
+        os.remove(path)
     if os.path.exists(path):
         with zipfile.ZipFile(path, "r") as zipped_f:
             for file in zipped_f.namelist():
-                print(file, filename, file == filename)
                 if file == filename:
                     continue
                 with zipped_f.open(file) as f:
                     _files.append(file)
                     _content.append(f.read())
+        os.remove(path)
 
     with zipfile.ZipFile(path, "w") as zipped_f:
         for file, content in zip(_files, _content):
