@@ -32,7 +32,6 @@ from utils.utils import (
     get_from_sched_file,
     make_metadata,
     parse,
-    save_file,
     save_row,
     table_fill_parent,
     table_set_headers,

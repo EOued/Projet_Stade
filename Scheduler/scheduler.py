@@ -1,5 +1,12 @@
 import zipfile
-from PyQt6.QtWidgets import QDialog, QHBoxLayout, QMenuBar, QVBoxLayout
+from PyQt6.QtWidgets import (
+    QDialog,
+    QHBoxLayout,
+    QMainWindow,
+    QMenuBar,
+    QVBoxLayout,
+    QWidget,
+)
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 
@@ -11,9 +18,7 @@ from utils.utils import (
     filePicker,
     filename_from_metadata,
     get_from_sched_file,
-    load_file,
     make_metadata,
-    save_file,
     yes_or_no,
 )
 from utils.utils_classes import ComboBox, PopupMessage, Variables
@@ -25,18 +30,9 @@ import json
 import os
 
 
-class Scheduler(QDialog):
+class Scheduler(QMainWindow):
     def __init__(self, filepath=None):
         super().__init__()
-        self.setWindowFlags(
-            Qt.WindowType.Tool
-            | Qt.WindowType.WindowStaysOnTopHint
-            | Qt.WindowType.Popup
-            | Qt.WindowType.FramelessWindowHint
-        )
-
-        self.setGeometry(0, 0, 946, 844)
-
         self.table = CustomTable()
         self.table.loadData([])
 
@@ -73,7 +69,9 @@ class Scheduler(QDialog):
         layout.addLayout(hlayout)
 
         layout.addWidget(self.table)
-        self.setLayout(layout)
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.setCentralWidget(widget)
 
         self.filepath = filepath
         self.data = {}

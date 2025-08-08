@@ -8,6 +8,6 @@ class Var(Enum):
 
 
 def variable(name: Var):
-    with open("__VARIABLES__.yaml", "r") as f:
+    with open("__VARIABLES__.yaml", "r", encoding="utf8") as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
         return data[name.name]

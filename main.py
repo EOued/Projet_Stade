@@ -23,7 +23,8 @@ class MainUI:
         scheduler_button.setIcon(QIcon("ressources/scheduler_icon.png"))
         scheduler_button.setIconSize(0.5 * QSize(520, 440))
         scheduler_button.setStyleSheet("padding: 0px;")
-        scheduler_button.clicked.connect(lambda _: Scheduler().exec())
+        scheduler = Scheduler()
+        scheduler_button.clicked.connect(lambda _: scheduler.show())
 
         perioder_button = self.window.findChild(QPushButton, "perioder")
         perioder_button.setIcon(QIcon("ressources/perioder_icon.png"))
