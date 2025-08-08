@@ -1,10 +1,12 @@
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QPushButton
+from PyQt6.QtWidgets import QApplication, QLabel, QPushButton
 from PyQt6.uic.load_ui import loadUi
 
 from Scheduler.scheduler import Scheduler
-from Perioder.main import MyApplication
+from Lister.lister import Lister
+from Variables.variables import Var, variable
+
 
 import sys
 
@@ -27,7 +29,13 @@ class MainUI:
         perioder_button.setIcon(QIcon("ressources/perioder_icon.png"))
         perioder_button.setIconSize(0.5 * QSize(520, 440))
         perioder_button.setStyleSheet("padding: 0px;")
-        perioder_button.clicked.connect(lambda _: MyApplication())
+        perioder_button.clicked.connect(lambda _: Lister())
+
+        version_label = self.window.findChild(QLabel, "version")
+        version_label.setText(variable(Var.VERSION))
+
+        title_label = self.window.findChild(QLabel, "title")
+        title_label.setText(variable(Var.TITLE))
 
     def run(self):
         sys.exit(self.app.exec())

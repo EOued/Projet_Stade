@@ -1,16 +1,13 @@
 from copy import deepcopy
 import json
 import os
-import base64, zlib
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QApplication,
     QPushButton,
     QTableWidget,
 )
 from PyQt6.uic.load_ui import loadUi
-from Perioder.scheduler_popup import SchedulerPopup
 from Scheduler.scheduler import Scheduler
 from periods.period_opener import periods_popup
 
@@ -46,9 +43,9 @@ from utils.utils import (
 from python_core.connector import Connector
 
 
-class MyApplication:
+class Lister:
     def __init__(self):
-        self.window = loadUi("Perioder/perioder.ui")
+        self.window = loadUi("Lister/lister.ui")
         if self.window is None:
             raise ValueError("Window is not initialized")
 
