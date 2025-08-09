@@ -4,16 +4,14 @@ import os
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QMainWindow,
     QPushButton,
-    QTableWidget,
 )
-from PyQt6.uic.load_ui import loadUi
 from Scheduler.scheduler import Scheduler
 from periods.period_opener import periods_popup
 
 from python_core.field import FitType
 from utils.utils_classes import (
-    ActionMenuConnection,
     Menu,
     PopupMessage,
     Position,
@@ -40,18 +38,18 @@ from utils.utils import (
 
 
 from python_core.connector import Connector
+from Lister.lister_ui import Ui_MainWindow
 
 
-class Lister:
+class Lister(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        self.window = loadUi("Lister/lister.ui")
-        if self.window is None:
-            raise ValueError("Window is not initialized")
+        super().__init__()
+        self.setupUi(self)
 
-        ActionMenuConnection(self.window, "actionOpen", self.load_file)
-        ActionMenuConnection(self.window, "actionSave", self.save_file)
-        ActionMenuConnection(self.window, "actionSave_as", self.save_as_file)
-        ActionMenuConnection(self.window, "actionExecute", self.execute)
+        self.actionOpen.triggered.connect(self.load_file)
+        self.actionSave.triggered.connect(self.save_file)
+        self.actionSave_as.triggered.connect(self.save_as_file)
+        self.actionExecute.triggered.connect(self.execute)
 
         self.context_menu = Menu()
         self.context_menu.action(
@@ -66,9 +64,6 @@ class Lister:
 
         self.filepath = None
 
-        self.ftable: QTableWidget = self.window.findChild(QTableWidget, "fields_table")
-        self.ttable: QTableWidget = self.window.findChild(QTableWidget, "teams_table")
-
         self.clicked_widget = None
 
         self._frows: dict[str, int] = {}
@@ -78,12 +73,11 @@ class Lister:
         self.default_data = {"fields": [[["", 0], []]], "teams": [[["", 0, 0], []]]}
         self.pdata = {}
         self.type: Type = Type.FIELDS
-        self.window.show()
         self.preprocessing()
 
     def preprocessing(self):
-        table_set_headers(self.ftable, Variables().ftable_headers)
-        table_set_headers(self.ttable, Variables().ttable_headers)
+        table_set_headers(self.fields_table, Variables().ftable_headers)
+        table_set_headers(self.teams_table, Variables().ttable_headers)
 
         for type in Type:
             self.type = type
@@ -134,9 +128,13 @@ class Lister:
         yes_or_no(
             self.window,
             f"Le programme a été exécuté. Voulez-vous voir l'agencement des équipes ?",
-            lambda _: Scheduler(self.filepath).exec(),
+            lambda _: self.open_scheduler,
             lambda _: _,
         )
+
+    def open_scheduler(self):
+        scheduler = Scheduler(self.filepath)
+        scheduler.show()
 
     def load_file(self):
         current_data = get_data(self.window, self._frows, self._trows, self.pdata)
@@ -163,8 +161,8 @@ class Lister:
         self.init_data = deepcopy(data)
 
         for table, rows, string, type in [
-            (self.ttable, self._trows, "teams", Type.TEAMS),
-            (self.ftable, self._frows, "fields", Type.FIELDS),
+            (self.teams_table, self._trows, "teams", Type.TEAMS),
+            (self.fields_table, self._frows, "fields", Type.FIELDS),
         ]:
             self.type = type
             table.setRowCount(0)
@@ -204,7 +202,7 @@ class Lister:
         return [self._frows, self._trows][self.type.value]
 
     def get_table(self):
-        return [self.ftable, self.ttable][self.type.value]
+        return [self.fields_table, self.teams_table][self.type.value]
 
     def addRightClickMenu(self, widget, type):
         widget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)

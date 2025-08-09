@@ -231,7 +231,7 @@ def periods_popup(uuid, data, type: Type):
     )
     if popup.window is None:
         return
-    if popup.window.exec():
+    if popup.exec():
         _data = [reset_data_fields, reset_data_teams][type.value](data, uuid)
         [fields_data_parsing, teams_data_parsing][type.value](
             popup.displayed_data, _data

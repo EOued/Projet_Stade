@@ -1,46 +1,40 @@
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QLabel, QPushButton
-from PyQt6.uic.load_ui import loadUi
+from PyQt6.QtWidgets import QApplication, QMainWindow
 
 from Scheduler.scheduler import Scheduler
 from Lister.lister import Lister
 from Variables.variables import Var, variable
 
+from main_ui import Ui_MainWindow
+
 
 import sys
 
 
-class MainUI:
+class MainUI(QMainWindow, Ui_MainWindow):
     def __init__(self):
-        self.app = QApplication(sys.argv)
-        self.window = loadUi("main.ui")
-        if self.window is None:
-            return
-        self.window.show()
+        super().__init__()
+        self.setupUi(self)
 
-        scheduler_button = self.window.findChild(QPushButton, "scheduler")
-        scheduler_button.setIcon(QIcon("ressources/scheduler_icon.png"))
-        scheduler_button.setIconSize(0.5 * QSize(520, 440))
-        scheduler_button.setStyleSheet("padding: 0px;")
+        self.scheduler.setIcon(QIcon("ressources/scheduler_icon.png"))
+        self.scheduler.setIconSize(0.5 * QSize(520, 440))
+        self.scheduler.setStyleSheet("padding: 0px;")
         scheduler = Scheduler()
-        scheduler_button.clicked.connect(lambda _: scheduler.show())
+        self.scheduler.clicked.connect(lambda _: scheduler.show())
 
-        perioder_button = self.window.findChild(QPushButton, "perioder")
-        perioder_button.setIcon(QIcon("ressources/perioder_icon.png"))
-        perioder_button.setIconSize(0.5 * QSize(520, 440))
-        perioder_button.setStyleSheet("padding: 0px;")
-        perioder_button.clicked.connect(lambda _: Lister())
+        self.perioder.setIcon(QIcon("ressources/perioder_icon.png"))
+        self.perioder.setIconSize(0.5 * QSize(520, 440))
+        self.perioder.setStyleSheet("padding: 0px;")
+        lister = Lister()
+        self.perioder.clicked.connect(lambda _: lister.show())
 
-        version_label = self.window.findChild(QLabel, "version")
-        version_label.setText(variable(Var.VERSION))
-
-        title_label = self.window.findChild(QLabel, "title")
-        title_label.setText(variable(Var.TITLE))
-
-    def run(self):
-        sys.exit(self.app.exec())
+        self.version.setText(variable(Var.VERSION))
+        self.title.setText(variable(Var.TITLE))
 
 
 if __name__ == "__main__":
-    MainUI().run()
+    app = QApplication(sys.argv)
+    ui = MainUI()
+    ui.show()
+    sys.exit(app.exec())
