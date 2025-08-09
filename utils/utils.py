@@ -1,4 +1,6 @@
+import sys
 import zipfile
+from pathlib import Path
 from PyQt6.QtWidgets import (
     QFileDialog,
     QHeaderView,
@@ -275,3 +277,12 @@ def yes_or_no(parent, message, accept, cancel):
         accept(None)
     else:
         cancel(None)
+
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller bundle."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        bundle_dir = Path(sys._MEIPASS)
+    else:
+        bundle_dir = Path(__file__).parent.parent
+    return os.path.join(bundle_dir, relative_path)
