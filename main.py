@@ -11,19 +11,21 @@ from main_ui import Ui_MainWindow
 
 import sys
 
+from utils.utils import resource_path
+
 
 class MainUI(QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
 
-        self.scheduler.setIcon(QIcon("ressources/scheduler_icon.png"))
+        self.scheduler.setIcon(QIcon(resource_path("ressources/scheduler_icon.png")))
         self.scheduler.setIconSize(0.5 * QSize(520, 440))
         self.scheduler.setStyleSheet("padding: 0px;")
         scheduler = Scheduler()
         self.scheduler.clicked.connect(lambda _: scheduler.show())
 
-        self.perioder.setIcon(QIcon("ressources/perioder_icon.png"))
+        self.perioder.setIcon(QIcon(resource_path("ressources/perioder_icon.png")))
         self.perioder.setIconSize(0.5 * QSize(520, 440))
         self.perioder.setStyleSheet("padding: 0px;")
         lister = Lister()
