@@ -8,6 +8,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
 )
 from Scheduler.scheduler import Scheduler
+from Variables.variables import Var, variable
 from periods.period_opener import periods_popup
 
 from python_core.field import FitType
@@ -42,14 +43,25 @@ from Lister.lister_ui import Ui_MainWindow
 
 
 class Lister(QMainWindow, Ui_MainWindow):
-    def __init__(self):
+    def __init__(self, language):
         super().__init__()
         self.setupUi(self)
 
+        self.language = language
+
+        self.menuFile.setTitle(variable(Var.FILE, self.language))
+
+        self.actionOpen.setText(variable(Var.OPEN, self.language))
         self.actionOpen.triggered.connect(self.load_file)
+
         self.actionSave.triggered.connect(self.save_file)
+        self.actionSave.setText(variable(Var.SAVE, self.language))
+
         self.actionSave_as.triggered.connect(self.save_as_file)
+        self.actionSave_as.setText(variable(Var.SAVEAS, self.language))
+
         self.actionExecute.triggered.connect(self.execute)
+        self.actionExecute.setText(variable(Var.EXECUTE, self.language))
 
         self.context_menu = Menu()
         self.context_menu.action(
@@ -74,6 +86,9 @@ class Lister(QMainWindow, Ui_MainWindow):
         self.pdata = {}
         self.type: Type = Type.FIELDS
         self.preprocessing()
+
+        self.tabWidget.setTabText(0, variable(Var.FIELDS, self.language))
+        self.tabWidget.setTabText(1, variable(Var.TEAMS, self.language))
 
     def preprocessing(self):
         table_set_headers(self.fields_table, Variables().ftable_headers)

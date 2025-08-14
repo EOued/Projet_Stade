@@ -1,10 +1,11 @@
 from PyQt6.QtCore import QSize
 from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow
+import yaml
 
 from Scheduler.scheduler import Scheduler
 from Lister.lister import Lister
-from Variables.variables import Var, variable
+from Variables.variables import Languages, Var, variable
 
 from main_ui import Ui_MainWindow
 
@@ -22,17 +23,23 @@ class MainUI(QMainWindow, Ui_MainWindow):
         self.scheduler.setIcon(QIcon(resource_path("ressources/scheduler_icon.png")))
         self.scheduler.setIconSize(0.5 * QSize(520, 440))
         self.scheduler.setStyleSheet("padding: 0px;")
-        scheduler = Scheduler()
+
+        languages = open("config.yaml", "r")
+        languages = yaml.load(languages, Loader=yaml.FullLoader)
+        language = languages["LANGUAGE"]
+
+        scheduler = Scheduler(language=language)
         self.scheduler.clicked.connect(lambda _: scheduler.show())
 
         self.perioder.setIcon(QIcon(resource_path("ressources/perioder_icon.png")))
         self.perioder.setIconSize(0.5 * QSize(520, 440))
         self.perioder.setStyleSheet("padding: 0px;")
-        lister = Lister()
+
+        lister = Lister(language=language)
         self.perioder.clicked.connect(lambda _: lister.show())
 
         self.version.setText(variable(Var.VERSION))
-        self.title.setText(variable(Var.TITLE))
+        self.title.setText(variable(Var.TITLE, language))
 
 
 if __name__ == "__main__":

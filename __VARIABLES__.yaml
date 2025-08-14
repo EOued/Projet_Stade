@@ -1,2 +1,31 @@
-VERSION: 1.0.2
-TITLE: "Gestionnaire d'équipes"
+VERSION: 1.0.3
+AV_LANGUAGES:
+  - EN
+  - FR
+LANGUAGE_NAME:
+  - EN: "English"
+  - FR: "Français"
+TITLE:
+  - EN: "Teams manager"
+  - FR: "Gestionnaire d'équipes"
+TEAMS:
+  - EN: "Teams"
+  - FR: "Équipes"
+FIELDS:
+  - EN: "Fields"
+  - FR: "Terrains"
+FILE:
+  - EN: "File"
+  - FR: "Fichier"
+OPEN:
+  - EN: "Open"
+  - FR: "Ouvrir"
+SAVE:
+  - EN: "Save"
+  - FR: "Enregister"
+SAVEAS:
+  - EN: "Save as..."
+  - FR: "Enregistrer sous..."
+EXECUTE:
+  - EN: "Execute"
+  - FR: "Exécuter"

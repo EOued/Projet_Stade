@@ -1,6 +1,5 @@
 import zipfile
 from PyQt6.QtWidgets import (
-    QDialog,
     QHBoxLayout,
     QMainWindow,
     QMenuBar,
@@ -31,10 +30,12 @@ import os
 
 
 class Scheduler(QMainWindow):
-    def __init__(self, filepath=None):
+    def __init__(self, language, filepath=None):
         super().__init__()
         self.table = CustomTable()
         self.table.loadData([])
+
+        self.language = language
 
         self.myQMenuBar = QMenuBar()
         menu = self.myQMenuBar.addMenu("Fichier")
@@ -82,10 +83,14 @@ class Scheduler(QMainWindow):
             self.load_file(self.filepath)
 
     def TF_BOX(self):
+        if self.filepath is None or not os.path.exists(self.filepath):
+            return
         self.update_combobox()
         self.load_data()
 
     def load_data(self):
+        if self.filepath is None or not os.path.exists(self.filepath):
+            return
         if self.current_key is not None:
             self.data[self.current_key] = self.table.extractData()
 
