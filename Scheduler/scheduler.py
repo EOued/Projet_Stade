@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QAction
 
 from Scheduler.table import CustomTable
@@ -20,7 +19,8 @@ from utils.utils import (
     make_metadata,
     yes_or_no,
 )
-from utils.utils_classes import ComboBox, PopupMessage, Variables
+from utils.utils_classes import ComboBox, Variables
+from Variables.variables import variable, Var
 from copy import deepcopy
 import re
 
@@ -30,30 +30,38 @@ import os
 
 
 class Scheduler(QMainWindow):
-    def __init__(self, language, filepath=None):
+    def __init__(self, language, theme, filepath=None):
         super().__init__()
-        self.table = CustomTable()
+        self.table = CustomTable(theme=theme, language=language)
         self.table.loadData([])
 
         self.language = language
 
         self.myQMenuBar = QMenuBar()
-        menu = self.myQMenuBar.addMenu("Fichier")
+        menu = self.myQMenuBar.addMenu(variable(Var.FILE, self.language))
         if menu is None:
             return
-        loadAction = QAction("Ouvrir", menu)
+        loadAction = QAction(variable(Var.OPEN, self.language), menu)
         loadAction.triggered.connect(self.load_file)
         menu.addAction(loadAction)
-        saveAction = QAction("Enregistrer", menu)
+        saveAction = QAction(variable(Var.SAVE, self.language), menu)
         saveAction.triggered.connect(self.save_file)
         menu.addAction(saveAction)
-        saveAsAction = QAction("Enregistrer sous...", menu)
+        saveAsAction = QAction(variable(Var.SAVEAS, self.language), menu)
         saveAsAction.triggered.connect(self.save_as_file)
         menu.addAction(saveAsAction)
 
-        self.tf_box = ComboBox(["Équipe", "Terrain"])
+        self.tf_box = ComboBox(
+            [variable(Var.FIELDS, self.language), variable(Var.TEAMS, self.language)]
+        )
         self.name_box = ComboBox([])
-        self.fit_box = ComboBox(["First Fit", "Best Fit", "Worst Fit"])
+        self.fit_box = ComboBox(
+            [
+                variable(Var.FIRST_FIT, self.language),
+                variable(Var.BEST_FIT, self.language),
+                variable(Var.WORST_FIT, self.language),
+            ]
+        )
         self.tf_box.activated.connect(self.TF_BOX)
         self.name_box.activated.connect(self.load_data)
         self.fit_box.activated.connect(self.load_data)
@@ -80,7 +88,7 @@ class Scheduler(QMainWindow):
         self.current_key = None
 
         if self.filepath is not None:
-            self.load_file(self.filepath)
+            self.load_file(None, path=self.filepath)
 
     def TF_BOX(self):
         if self.filepath is None or not os.path.exists(self.filepath):
@@ -139,7 +147,7 @@ class Scheduler(QMainWindow):
         self.name_box.clear()
         self.name_box.addItems(filenames)
 
-    def load_file(self, path=None):
+    def load_file(self, _, path=None):
         if self.current_key is not None:
             self.data[self.current_key] = self.table.extractData()
         if self.data != self.initial_data:
@@ -153,8 +161,8 @@ class Scheduler(QMainWindow):
             self.filepath = filePicker(ext="sched")
         else:
             self.filepath = path
-        if self.filepath == None:
 
+        if self.filepath == None:
             return
 
         if self.filepath.split(".")[-1] != "sched":
@@ -174,7 +182,6 @@ class Scheduler(QMainWindow):
         if self.current_key is not None:
             self.data[self.current_key] = self.table.extractData()
 
-        # save_file(self.filepath, data)
         for filename, data in self.data.items():
             add_to_sched_file(
                 self.filepath,

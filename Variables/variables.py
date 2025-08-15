@@ -1,21 +1,72 @@
 from enum import Enum, auto
 from types import NoneType
-import yaml
-from utils.utils import resource_path
+from pathlib import Path
+import yaml, sys, os
+
+Var = Enum(
+    "Var",
+    [
+        "VERSION",
+        "AV_LANGUAGES",
+        "LANGUAGE_NAME",
+        "TITLE",
+        "TEAMS",
+        "FIELDS",
+        "FILE",
+        "OPEN",
+        "SAVE",
+        "SAVEAS",
+        "EXECUTE",
+        "IDENTIFIER",
+        "TYPE",
+        "PERIOD",
+        "PORTION",
+        "PRIORITY",
+        "DAY",
+        "HOUR",
+        "DURATION",
+        "START",
+        "END",
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY",
+        "NAME",
+        "NATURAL",
+        "SYNTHETIC",
+        "WHOLE",
+        "HALF",
+        "QUARTER",
+        "ADD",
+        "DELETE",
+        "FIRST_FIT",
+        "BEST_FIT",
+        "WORST_FIT",
+        "AM",
+        "PM",
+        "INSERT_BEFORE",
+        "INSERT_AFTER",
+        "SUPRESS",
+        "EXECUTE_NO_DATA",
+        "EXECUTE_SAVE_DATA",
+        "EXECUTE_PERIOD_FAIL",
+        "EXECUTE_SUCCESS",
+        "LOAD_FILE_MODIFIED",
+    ],
+    start=0,
+)
 
 
-class Var(Enum):
-    VERSION = auto()
-    AV_LANGUAGES = auto()
-    LANGUAGE_NAME = auto()
-    TITLE = auto()
-    TEAMS = auto()
-    FIELDS = auto()
-    FILE = auto()
-    OPEN = auto()
-    SAVE = auto()
-    SAVEAS = auto()
-    EXECUTE = auto()
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller bundle."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        bundle_dir = Path(sys._MEIPASS)
+    else:
+        bundle_dir = Path(__file__).parent.parent
+    return os.path.join(bundle_dir, relative_path)
 
 
 def _variable(name: Var):
@@ -32,5 +83,4 @@ def variable(name: Var, language: str | NoneType = None):
     if language is None:
         return _variable(name)
     else:
-        print(_variable(name))
         return _variable(name)[Languages[language].value][language]

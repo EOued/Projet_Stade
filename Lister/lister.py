@@ -65,14 +65,16 @@ class Lister(QMainWindow, Ui_MainWindow):
 
         self.context_menu = Menu()
         self.context_menu.action(
-            "Insérer une nouvelle ligne avant cette ligne",
+            variable(Var.INSERT_BEFORE, self.language),
             lambda: self.insert_row(Position.BEFORE),
         )
         self.context_menu.action(
-            "Insérer une nouvelle ligne après cette ligne",
+            variable(Var.INSERT_AFTER, self.language),
             lambda: self.insert_row(Position.AFTER),
         )
-        self.context_menu.action("Supprimer cette ligne", self.delete_current_row)
+        self.context_menu.action(
+            variable(Var.SUPRESS, self.language), self.delete_current_row
+        )
 
         self.filepath = None
 
@@ -91,8 +93,8 @@ class Lister(QMainWindow, Ui_MainWindow):
         self.tabWidget.setTabText(1, variable(Var.TEAMS, self.language))
 
     def preprocessing(self):
-        table_set_headers(self.fields_table, Variables().ftable_headers)
-        table_set_headers(self.teams_table, Variables().ttable_headers)
+        table_set_headers(self.fields_table, Variables().ftable_headers(self.language))
+        table_set_headers(self.teams_table, Variables().ttable_headers(self.language))
 
         for type in Type:
             self.type = type
@@ -101,14 +103,12 @@ class Lister(QMainWindow, Ui_MainWindow):
             self.set_row(0)
 
     def execute(self):
-        current_data = get_data(self.window, self._frows, self._trows, self.pdata)
+        current_data = get_data(self, self._frows, self._trows, self.pdata)
         if current_data == self.default_data:
-            PopupMessage("Aucune donnée n'a été entrée : exécution stoppée.").exec()
+            PopupMessage(variable(Var.EXECUTE_NO_DATA, self.language)).exec()
             return
         if self.filepath is None:
-            PopupMessage(
-                "Merci d'enregistrer les données avant de lancer l'exécution."
-            ).exec()
+            PopupMessage(variable(Var.EXECUTE_SAVE_DATA, self.language)).exec()
             return
 
         connection = Connector()
@@ -117,8 +117,8 @@ class Lister(QMainWindow, Ui_MainWindow):
         unfitted = connection.fit()
         unfitted_text = ""
         for unfit in unfitted:
-            unfitted_text += "La période suivante n'a pas pu être ajoutée:\n"
-            unfitted_text += f"\tÉquipe: {unfit[0]}\n\tJour: {Variables().days[unfit[1]]}\n\tDurée: {unfit[2]}\n\tType de terrain: {['Naturel', 'Synthétique'][unfit[3]]}\n"
+            unfitted_text += f"{variable(Var.EXECUTE_PERIOD_FAIL, self.language)}:\n"
+            unfitted_text += f"\t{variable(Var.TEAMS, self.language)}: {unfit[0]}\n\t{variable(Var.DAY, self.language)}: {Variables().days[unfit[1]]}\n\t{variable(Var.DURATION, self.language)}: {unfit[2]}\n\t{variable(Var.TYPE, self.language)}: {['Naturel', 'Synthétique'][unfit[3]]}\n"
         if unfitted != []:
             PopupMessage(unfitted_text).exec()
 
@@ -142,7 +142,7 @@ class Lister(QMainWindow, Ui_MainWindow):
 
         yes_or_no(
             self.window,
-            f"Le programme a été exécuté. Voulez-vous voir l'agencement des équipes ?",
+            variable(Var.EXECUTE_SUCCESS, self.language),
             lambda _: self.open_scheduler,
             lambda _: _,
         )
@@ -152,11 +152,11 @@ class Lister(QMainWindow, Ui_MainWindow):
         scheduler.show()
 
     def load_file(self):
-        current_data = get_data(self.window, self._frows, self._trows, self.pdata)
+        current_data = get_data(self, self._frows, self._trows, self.pdata)
         if current_data != self.init_data:
             yes_or_no(
-                self.window,
-                "This file have been modified. Save it ?",
+                self,
+                variable(Var.LOAD_FILE_MODIFIED, self.language),
                 self.save_file,
                 lambda _: _,
             )
@@ -205,7 +205,7 @@ class Lister(QMainWindow, Ui_MainWindow):
         if self.filepath.split(".")[-1] != "sched":
             self.filepath += ".sched"
 
-        data = get_data(self.window, self._frows, self._trows, self.pdata)
+        data = get_data(self, self._frows, self._trows, self.pdata)
         self.init_data = deepcopy(data)
         add_to_sched_file(
             self.filepath,
@@ -241,7 +241,9 @@ class Lister(QMainWindow, Ui_MainWindow):
             if periods != None:
                 self.pdata[widget.objectName()] = periods
             widget.clicked.connect(
-                lambda _: periods_popup(widget.objectName(), self.pdata, type)
+                lambda _: periods_popup(
+                    widget.objectName(), self.pdata, type, self.language
+                )
             )
 
         table.setCellWidget(row, column, widget)
@@ -250,7 +252,11 @@ class Lister(QMainWindow, Ui_MainWindow):
         elemList = [Variables().frows, Variables().trows][self.type.value]
         for column, element in enumerate(elemList):
             self.widget_empty_row_processing(
-                parse(element, values[column] if values is not None else None),
+                parse(
+                    element,
+                    self.language,
+                    values[column] if values is not None else None,
+                ),
                 self.get_table(),
                 self.get_rows(),
                 row,

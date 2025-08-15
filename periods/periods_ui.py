@@ -201,7 +201,6 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
         self.treeWidget.setSortingEnabled(False)
-        self.treeWidget.headerItem().setText(0, _translate("Dialog", "Jours"))
         self.mon.setText(_translate("Dialog", "Lundi"))
         self.tue.setText(_translate("Dialog", "Mardi"))
         self.wed.setText(_translate("Dialog", "Mercredi"))

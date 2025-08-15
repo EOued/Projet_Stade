@@ -23,24 +23,63 @@ from utils.utils_classes import (
 )
 
 from uuid import uuid4
-import json
-import os
+import json, os, base64, zlib, numpy
 
-import base64, zlib
+from colormath.color_objects import sRGBColor, LabColor
+from colormath.color_conversions import convert_color
+from colormath.color_diff import delta_e_cie2000
+from Variables.variables import Var, variable
 
 
-def parse(string, value=None):
+def patch_asscalar(a):
+    return a.item()
+
+
+setattr(numpy, "asscalar", patch_asscalar)
+
+
+def invert_hex(hex_color):
+    """Invert a hex color (light ↔ dark)."""
+    hex_color = hex_color.lstrip("#")
+    r, g, b = (int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
+    inverted = (255 - r, 255 - g, 255 - b)
+    return "#{:02X}{:02X}{:02X}".format(*inverted)
+
+
+def hex_to_rgb(hex_color):
+    """Convert hex string (#RRGGBB) to RGB tuple (0-255)."""
+    hex_color = hex_color.lstrip("#")
+    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))
+
+
+def delta_e(hex1, hex2):
+    c1 = hex_to_rgb(hex1)
+    c2 = hex_to_rgb(hex2)
+    color1 = sRGBColor(*c1, is_upscaled=True)  # 0-255 input
+    color2 = sRGBColor(*c2, is_upscaled=True)
+
+    lab1 = convert_color(color1, LabColor)
+    lab2 = convert_color(color2, LabColor)
+
+    return delta_e_cie2000(lab1, lab2)
+
+
+def parse(string, language, value=None):
     widget = None
     parameters = json.loads(string.split("-")[1])
     match string.split("-")[0]:
         case "TextEntry":
-            widget = TextEntry(*parameters)
+            widget = TextEntry(variable(Var[parameters[0]], language))
         case "ComboBox":
-            widget = ComboBox(*parameters)
+            print(parameters)
+            print([Var[parameter] for parameter in parameters])
+            widget = ComboBox(
+                [variable(Var[parameter], language) for parameter in parameters]
+            )
         case "SpinBox":
             widget = SpinBox(*parameters)
         case "Button":
-            widget = QPushButton(*parameters)
+            widget = QPushButton(variable(Var[parameters[0]], language))
         case _:
             return None
     if value is None:

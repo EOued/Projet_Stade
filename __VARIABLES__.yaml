@@ -29,3 +29,118 @@ SAVEAS:
 EXECUTE:
   - EN: "Execute"
   - FR: "Exécuter"
+IDENTIFIER:
+  - EN: "Identifier"
+  - FR: "Identifiant"
+TYPE:
+  - EN: "Type"
+  - FR: "Type"
+PERIOD:
+  - EN: "Period"
+  - FR: "Période"
+PORTION:
+  - EN: "Portion"
+  - FR: "Portion"
+PRIORITY:
+  - EN: "Priority"
+  - FR: "Priorité"
+DAY: 
+  - EN: "Day"
+  - FR: "Jour"
+HOUR:
+  - EN: "Hour(s)"
+  - FR: "Heure(s)"
+DURATION:
+  - EN: "Duration"
+  - FR: "Durée"
+START:
+  - EN: "Start"
+  - FR: "Début"
+END:
+  - EN: "End"
+  - FR: "Fin"
+MONDAY:
+  - EN: "Monday"
+  - FR: "Lundi"
+TUESDAY:
+  - EN: "Tuesday"
+  - FR: "Mardi"
+WEDNESDAY:
+  - EN: "Wednesday"
+  - FR: "Mercredi"
+THURSDAY:
+  - EN: "Thursday"
+  - FR: "Jeudi"
+FRIDAY:
+  - EN: "Friday"
+  - FR: "Vendredi"
+SATURDAY:
+  - EN: "Saturday"
+  - FR: "Samedi"
+SUNDAY:
+  - EN: "Sunday"
+  - FR: "Dimanche"
+NAME:
+  - EN: "Name"
+  - FR: "Nom"
+NATURAL:
+  - EN: "Natural"
+  - FR: "Naturel"
+SYNTHETIC:
+  - EN: "Synthetic"
+  - FR: "Synthétique"
+WHOLE:
+  - EN: "Whole field"
+  - FR: "Terrain entier"
+HALF:
+  - EN: "Half field"
+  - FR: "Demi terrain"
+QUARTER:
+  - EN: "Quarter field"
+  - FR: "Quart de terrain"
+ADD:
+  - EN: "Add"
+  - FR: "Ajouter"
+DELETE:
+  - EN: "Delete"
+  - FR: "Supprimer"
+FIRST_FIT:
+  - EN: "First Fit"
+  - FR: "Premier Choix"
+BEST_FIT:
+  - EN: "Best Fit"
+  - FR: "Meileur Choix"
+WORST_FIT:
+  - EN: "Worst Fit"
+  - FR: "Pire Choix"
+AM:
+  - EN: " AM"
+  - FR: "h"
+PM:
+  - EN: " PM"
+  - FR: "h"
+INSERT_BEFORE:
+  - EN: "Insert a new line before this line"
+  - FR: "Insérer une nouvelle ligne avant cette ligne"
+INSERT_AFTER:
+  - EN: "Insert a new line after this line"
+  - FR: "Insérer une nouvelle ligne après cette ligne"
+SUPRESS:
+  - EN: "Supress this line"
+  - FR: "Supprimer cette ligne"
+EXECUTE_NO_DATA:
+  - EN: "No data entered: stopped execution"
+  - FR: "Aucune donnée entrée : exécution stoppée"
+EXECUTE_SAVE_DATA:
+  - EN: "Please save the data before starting the execution"
+  - FR: "Merci d'enregistrer les données avant de lancer l'exécution"
+EXECUTE_PERIOD_FAIL:
+  - EN: "Following period can't be added"
+  - FR: "La période suivant n'a pas pu être ajoutée"
+EXECUTE_SUCCESS:
+  - EN: "Program executed. Do you want to see the schedule ?"
+  - FR: "Programme exécuté. Voulez-vous voir l'agencement des équipes ?"
+LOAD_FILE_MODIFIED:
+  - EN: "Current file have been modified. Save it ?"
+  - FR: "Le fichier actuel a été modifié. Voulez-vous l'enregistrer ?"
+

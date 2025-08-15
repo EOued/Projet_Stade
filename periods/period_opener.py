@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QComboBox, QSpinBox
+from Variables.variables import Var, variable
 from utils.utils import Type
 from periods.periods import PeriodsUI
 
@@ -220,14 +221,18 @@ def teams_check_function(_, _2, _3):
     return ""
 
 
-def periods_popup(uuid, data, type: Type):
+def periods_popup(uuid, data, type: Type, language):
     __data = [retrieve_data_fields, retrieve_data_teams][type.value](data, uuid)
     popup = PeriodsUI(
+        language,
         [fields_data_loading, teams_data_loading][type.value](__data),
         [periods_fields_adder, periods_teams_adder][type.value],
         [fields_check_function, teams_check_function][type.value],
         [["type_combo"], ["end"]][type.value],
-        [["Début", "Fin"], ["Durée", "Type"]][type.value],
+        [
+            [variable(Var.START, language), variable(Var.END, language)],
+            [variable(Var.DURATION, language), variable(Var.TYPE, language)],
+        ][type.value],
     )
     if popup.window is None:
         return

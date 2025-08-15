@@ -15,6 +15,8 @@ from PyQt6.QtWidgets import (
 from enum import Enum
 import re
 
+from Variables.variables import Var, variable
+
 
 class TextEntry(QLineEdit):
     def __init__(self, placeholder):
@@ -104,32 +106,38 @@ class TreeItem(QTreeWidgetItem):
 class Variables:
     def __init__(self):
         self.frows: list[str] = [
-            'TextEntry-["Nom"]',
-            'ComboBox-[["Naturel", "Synthétique"]]',
-            'Button-["Périodes"]',
+            'TextEntry-["NAME"]',
+            'ComboBox-["NATURAL", "SYNTHETIC"]',
+            'Button-["PERIOD"]',
         ]
 
         self.trows: list[str] = [
-            'TextEntry-["Nom"]',
-            'ComboBox-[["Terrain entier", "Demi terrain", "Quart de terrain"]]',
+            'TextEntry-["NAME"]',
+            'ComboBox-["WHOLE", "HALF", "QUARTER"]',
             "SpinBox-[0, 100, 0, 1]",
-            'Button-["Périodes"]',
+            'Button-["PERIOD"]',
         ]
 
-        self.ftable_headers = ["Identifiants", "Type", "Période"]
-        self.ttable_headers = ["Identifiants", "Portion", "Priorité", "Période"]
-
         self.days = [
-            "Lundi",
-            "Mardi",
-            "Mercredi",
-            "Jeudi",
-            "Vendredi",
-            "Samedi",
-            "Dimanche",
+            Var.MONDAY,
+            Var.TUESDAY,
+            Var.WEDNESDAY,
+            Var.THURSDAY,
+            Var.FRIDAY,
+            Var.SATURDAY,
+            Var.SUNDAY,
         ]
 
         self.fittype = ["FIRST_FIT", "BEST_FIT", "WORST_FIT"]
+
+        self._ftable_headers = [Var.IDENTIFIER, Var.TYPE, Var.PERIOD]
+        self._ttable_headers = [Var.IDENTIFIER, Var.PORTION, Var.PRIORITY, Var.PERIOD]
+
+    def ftable_headers(self, language):
+        return list(map(lambda x: variable(x, language), self._ftable_headers))
+
+    def ttable_headers(self, language):
+        return list(map(lambda x: variable(x, language), self._ttable_headers))
 
 
 class Label(QLabel):
