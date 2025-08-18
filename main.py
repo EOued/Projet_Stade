@@ -17,14 +17,15 @@ class MainUI(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        self.scheduler.setIcon(QIcon(resource_path("ressources/scheduler_icon.png")))
-        self.scheduler.setIconSize(0.5 * QSize(520, 440))
-        self.scheduler.setStyleSheet("padding: 0px;")
-
         languages = open("config.yaml", "r")
         languages = yaml.load(languages, Loader=yaml.FullLoader)
         language = languages["LANGUAGE"]
 
+        self.setWindowTitle(variable(Var.TITLE, language))
+
+        self.scheduler.setIcon(QIcon(resource_path("ressources/scheduler_icon.png")))
+        self.scheduler.setIconSize(0.5 * QSize(520, 440))
+        self.scheduler.setStyleSheet("padding: 0px;")
         scheduler = Scheduler(theme=theme, language=language)
         self.scheduler.clicked.connect(lambda _: scheduler.show())
 
