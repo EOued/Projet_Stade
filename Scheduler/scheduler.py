@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 
 from Scheduler.table import CustomTable
 from utils.utils import (
@@ -17,6 +17,7 @@ from utils.utils import (
     filename_from_metadata,
     get_from_sched_file,
     make_metadata,
+    resource_path,
     yes_or_no,
 )
 from utils.utils_classes import ComboBox, Variables
@@ -36,6 +37,9 @@ class Scheduler(QMainWindow):
         self.table.loadData([])
 
         self.language = language
+
+        self.setWindowTitle(variable(Var.TITLE, language))
+        self.setWindowIcon(QIcon(resource_path("ressources/app_icon.png")))
 
         self.myQMenuBar = QMenuBar()
         menu = self.myQMenuBar.addMenu(variable(Var.FILE, self.language))

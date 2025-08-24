@@ -3,6 +3,7 @@ import json
 import os
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import (
     QMainWindow,
     QPushButton,
@@ -31,6 +32,7 @@ from utils.utils import (
     get_from_sched_file,
     make_metadata,
     parse,
+    resource_path,
     save_row,
     table_fill_parent,
     table_set_headers,
@@ -48,6 +50,9 @@ class Lister(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.language = language
+
+        self.setWindowTitle(variable(Var.TITLE, language))
+        self.setWindowIcon(QIcon(resource_path("ressources/app_icon.png")))
 
         self.menuFile.setTitle(variable(Var.FILE, self.language))
 

@@ -1,9 +1,10 @@
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QDialog, QHeaderView, QWidget
 
 
 from Variables.variables import Var, variable
-from utils.utils import insert_item_to_tree, period_popup_error_code
+from utils.utils import insert_item_to_tree, period_popup_error_code, resource_path
 
 from periods.periods_ui import Ui_Dialog
 
@@ -23,6 +24,9 @@ class PeriodsUI(QDialog, Ui_Dialog):
         self.setupUi(self)
 
         self.language = language
+
+        self.setWindowTitle(variable(Var.TITLE, language))
+        self.setWindowIcon(QIcon(resource_path("ressources/app_icon.png")))
 
         self.insertion_function = insertion_function
         self.check_function = check_function

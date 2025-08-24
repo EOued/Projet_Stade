@@ -22,6 +22,7 @@ class MainUI(QMainWindow, Ui_MainWindow):
         language = languages["LANGUAGE"]
 
         self.setWindowTitle(variable(Var.TITLE, language))
+        self.setWindowIcon(QIcon(resource_path("ressources/app_icon.png")))
 
         self.scheduler.setIcon(QIcon(resource_path("ressources/scheduler_icon.png")))
         self.scheduler.setIconSize(0.5 * QSize(520, 440))
