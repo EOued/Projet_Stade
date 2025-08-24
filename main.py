@@ -17,7 +17,7 @@ class MainUI(QMainWindow, Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
 
-        languages = open("config.yaml", "r")
+        languages = open(resource_path("config.yaml"), "r")
         languages = yaml.load(languages, Loader=yaml.FullLoader)
         language = languages["LANGUAGE"]
 
