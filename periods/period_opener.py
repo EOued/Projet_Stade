@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QComboBox, QSpinBox
+from PySide6.QtWidgets import QComboBox, QSpinBox
 from Variables.variables import Var, variable
 from utils.utils import Type
 from periods.periods import PeriodsUI

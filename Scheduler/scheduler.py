@@ -1,12 +1,12 @@
 import zipfile
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QHBoxLayout,
     QMainWindow,
     QMenuBar,
     QVBoxLayout,
     QWidget,
 )
-from PyQt6.QtGui import QAction, QIcon
+from PySide6.QtGui import QAction, QIcon
 
 from Scheduler.table import CustomTable
 from utils.utils import (

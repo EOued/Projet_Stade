@@ -1,6 +1,6 @@
-from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QIcon
-from PyQt6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtCore import QSize
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication, QMainWindow
 import yaml, sys, qt_themes
 
 from Scheduler.scheduler import Scheduler

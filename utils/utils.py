@@ -1,7 +1,7 @@
 import sys
 import zipfile
 from pathlib import Path
-from PyQt6.QtWidgets import (
+from PySide6.QtWidgets import (
     QFileDialog,
     QHeaderView,
     QMessageBox,
@@ -10,7 +10,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from PyQt6.QtCore import QPointF
+from PySide6.QtCore import QPointF
 
 from python_core.field import FitType
 from utils.utils_classes import (

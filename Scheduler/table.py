@@ -1,7 +1,7 @@
 import typing
-from PyQt6.QtCore import QPointF
-from PyQt6.QtGui import QDropEvent
-from PyQt6.QtWidgets import QAbstractItemView, QTableWidget, QHeaderView
+from PySide6.QtCore import QPointF
+from PySide6.QtGui import QDropEvent
+from PySide6.QtWidgets import QAbstractItemView, QTableWidget, QHeaderView
 
 from Variables.variables import Var, variable
 from utils.utils import (
