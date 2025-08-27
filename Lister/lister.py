@@ -34,6 +34,7 @@ from utils.utils import (
     parse,
     resource_path,
     save_row,
+    sched_clear_nonft,
     table_fill_parent,
     table_set_headers,
     yes_or_no,
@@ -45,11 +46,12 @@ from Lister.lister_ui import Ui_MainWindow
 
 
 class Lister(QMainWindow, Ui_MainWindow):
-    def __init__(self, language):
+    def __init__(self, language, theme):
         super().__init__()
         self.setupUi(self)
 
         self.language = language
+        self.theme = theme
 
         self.setWindowTitle(variable(Var.TITLE, language))
         self.setWindowIcon(QIcon(resource_path("ressources/app_icon.png")))
@@ -124,9 +126,11 @@ class Lister(QMainWindow, Ui_MainWindow):
         for unfit in unfitted:
             unfitted_text += f"{variable(Var.EXECUTE_PERIOD_FAIL, self.language)}:\n"
             unfitted_text += f"\t{variable(Var.TEAMS, self.language)}: {unfit[0]}\n\t{variable(Var.DAY, self.language)}: {Variables().days[unfit[1]]}\n\t{variable(Var.DURATION, self.language)}: {unfit[2]}\n\t{variable(Var.TYPE, self.language)}: {['Naturel', 'Synthétique'][unfit[3]]}\n"
+
         if unfitted != []:
             PopupMessage(unfitted_text).exec()
 
+        sched_clear_nonft(self.filepath)
         for fit in FitType:
             connection.set_fit_type(fit)
             for field in connection.get_field_list():
@@ -146,15 +150,19 @@ class Lister(QMainWindow, Ui_MainWindow):
                 )
 
         yes_or_no(
-            self.window,
+            self,
             variable(Var.EXECUTE_SUCCESS, self.language),
-            lambda _: self.open_scheduler,
+            lambda _: self.open_scheduler(),
             lambda _: _,
         )
 
     def open_scheduler(self):
-        scheduler = Scheduler(self.filepath)
-        scheduler.show()
+        print("wuiyi")
+        self.scheduler = Scheduler(
+            theme=self.theme, language=self.language, filepath=self.filepath
+        )
+        self.scheduler.show()
+        print("owo")
 
     def load_file(self):
         current_data = get_data(self, self._frows, self._trows, self.pdata)

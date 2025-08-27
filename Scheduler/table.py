@@ -161,6 +161,6 @@ class CustomTable(QTableWidget):
                     continue
                 if widget.text() not in day_dict:
                     day_dict[widget.text()] = 0
-                day_dict[widget.text()] ^= 1 << row
+                day_dict[widget.text()] ^= 1 << (row - 1)
             data.append(day_dict)
         return data

@@ -1,3 +1,4 @@
+import copy
 from python_core.field import Field, FitType, Natural
 from python_core.team import Team
 from python_core.default import FieldPortion
@@ -22,18 +23,56 @@ class Connector:
             periods = team[1]
             self.teams.append(Team(data[0], FieldPortion(data[1]), data[2], periods))
 
+    @staticmethod
+    def split_field(field: Field):
+        if field.portion == FieldPortion.QUARTER:
+            return None
+        n1 = "-first-half"
+        n2 = "-second-half"
+        if len(field.name.split("-")) >= 2:
+            if "-".join(field.name.split("-")[-2:]) == "first-half":
+                n1 = "-first-quarter"
+                n2 = "-second-quarter"
+                field.name.replace("-first-half", "")
+            if "-".join(field.name.split("-")[-2:]) == "second-half":
+                n1 = "_third-quarter"
+                n2 = "_fourth-quarter"
+                field.name.replace("-second-half", "")
+
+        f1 = copy.deepcopy(field)
+        f2 = copy.deepcopy(field)
+        f1.portion = FieldPortion(f1.portion.value + 1)
+        f1.name += n1
+        f2.portion = FieldPortion(f2.portion.value + 1)
+        f2.name += n2
+        return f2, f1
+
     def fit(self):
         self.teams.sort(key=lambda team: (team.fieldportion.value, team.priority))
 
         unfittable = []
+
         for team in self.teams:
             for iday, day in enumerate(team.periods):
                 for period in day:
                     fitted = False
-                    for field in self.fields:
+                    index = 0
+                    while index < len(self.fields):
+                        field: Field = self.fields[index]
                         # Check field type
                         field_type = int(not isinstance(field, Natural))
                         if field_type != period[1]:
+                            index += 1
+                            continue
+                        if field.portion != team.fieldportion:
+                            del self.fields[index]
+                            splitted = self.split_field(field)
+                            if splitted == None:
+                                # Splitted to quarted and still unfittable
+                                return None
+                            f1, f2 = splitted
+                            self.fields.insert(index, f1)
+                            self.fields.insert(index, f2)
                             continue
                         fittable = field.fit(
                             iday,
@@ -48,6 +87,7 @@ class Connector:
                             team.add_field(iday, field.name, mask)
                             break
                     if fitted:
+                        index += 1
                         continue
 
                     unfittable.append([team.name, iday, period[0], period[1]])

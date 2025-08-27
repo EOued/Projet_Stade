@@ -26,6 +26,9 @@ SAVE:
 SAVEAS:
   - EN: "Save as..."
   - FR: "Enregistrer sous..."
+EXTRACTPDF:
+  - EN: "Extract as PDF"
+  - FR: "Extraire comme un PDF"
 EXECUTE:
   - EN: "Execute"
   - FR: "Exécuter"
@@ -143,4 +146,7 @@ EXECUTE_SUCCESS:
 LOAD_FILE_MODIFIED:
   - EN: "Current file have been modified. Save it ?"
   - FR: "Le fichier actuel a été modifié. Voulez-vous l'enregistrer ?"
+BAD_SCHEDULE:
+  - EN: "This schedule does not reference neither a team nor a field as it was made manually. Nothing will be save."
+  - FR: "Ce calendrier ne représente ni une équipe, ni un terrain, puisque ça a été construit manuellement. Rien ne sera enregistré."
 

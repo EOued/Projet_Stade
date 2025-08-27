@@ -19,26 +19,37 @@ class MainUI(QMainWindow, Ui_MainWindow):
 
         languages = open(resource_path("config.yaml"), "r")
         languages = yaml.load(languages, Loader=yaml.FullLoader)
-        language = languages["LANGUAGE"]
+        self.language = languages["LANGUAGE"]
+        self.theme = theme
 
-        self.setWindowTitle(variable(Var.TITLE, language))
+        self.setWindowTitle(variable(Var.TITLE, self.language))
         self.setWindowIcon(QIcon(resource_path("ressources/app_icon.png")))
 
-        self.scheduler.setIcon(QIcon(resource_path("ressources/scheduler_icon.png")))
-        self.scheduler.setIconSize(0.5 * QSize(520, 440))
-        self.scheduler.setStyleSheet("padding: 0px;")
-        scheduler = Scheduler(theme=theme, language=language)
-        self.scheduler.clicked.connect(lambda _: scheduler.show())
+        self.scheduler_button.setIcon(
+            QIcon(resource_path("ressources/scheduler_icon.png"))
+        )
+        self.scheduler_button.setIconSize(0.5 * QSize(520, 440))
+        self.scheduler_button.setStyleSheet("padding: 0px;")
+        self.scheduler_button.clicked.connect(self.openScheduler)
 
-        self.perioder.setIcon(QIcon(resource_path("ressources/perioder_icon.png")))
-        self.perioder.setIconSize(0.5 * QSize(520, 440))
-        self.perioder.setStyleSheet("padding: 0px;")
+        self.perioder_button.setIcon(
+            QIcon(resource_path("ressources/perioder_icon.png"))
+        )
+        self.perioder_button.setIconSize(0.5 * QSize(520, 440))
+        self.perioder_button.setStyleSheet("padding: 0px;")
 
-        lister = Lister(language=language)
-        self.perioder.clicked.connect(lambda _: lister.show())
+        self.perioder_button.clicked.connect(self.openLister)
 
         self.version.setText(variable(Var.VERSION))
-        self.title.setText(variable(Var.TITLE, language))
+        self.title.setText(variable(Var.TITLE, self.language))
+
+    def openScheduler(self):
+        self.scheduler = Scheduler(theme=self.theme, language=self.language)
+        self.scheduler.show()
+
+    def openLister(self):
+        self.lister = Lister(language=self.language, theme=self.theme)
+        self.lister.show()
 
 
 if __name__ == "__main__":

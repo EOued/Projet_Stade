@@ -42,39 +42,43 @@ class Ui_MainWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.layoutWidget)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
-        self.scheduler = QtWidgets.QPushButton(parent=self.layoutWidget)
+        self.scheduler_button = QtWidgets.QPushButton(parent=self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Policy.Expanding,
             QtWidgets.QSizePolicy.Policy.Expanding,
         )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.scheduler.sizePolicy().hasHeightForWidth())
-        self.scheduler.setSizePolicy(sizePolicy)
-        self.scheduler.setText("")
+        sizePolicy.setHeightForWidth(
+            self.scheduler_button.sizePolicy().hasHeightForWidth()
+        )
+        self.scheduler_button.setSizePolicy(sizePolicy)
+        self.scheduler_button.setText("")
         icon = QtGui.QIcon()
         icon.addPixmap(
             QtGui.QPixmap(":/ressources/scheduler_icon.png"),
             QtGui.QIcon.Mode.Normal,
             QtGui.QIcon.State.On,
         )
-        self.scheduler.setIcon(icon)
-        self.scheduler.setIconSize(QtCore.QSize(87, 87))
-        self.scheduler.setAutoRepeatInterval(100)
-        self.scheduler.setObjectName("scheduler")
-        self.horizontalLayout.addWidget(self.scheduler)
-        self.perioder = QtWidgets.QPushButton(parent=self.layoutWidget)
+        self.scheduler_button.setIcon(icon)
+        self.scheduler_button.setIconSize(QtCore.QSize(87, 87))
+        self.scheduler_button.setAutoRepeatInterval(100)
+        self.scheduler_button.setObjectName("scheduler")
+        self.horizontalLayout.addWidget(self.scheduler_button)
+        self.perioder_button = QtWidgets.QPushButton(parent=self.layoutWidget)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Policy.Expanding,
             QtWidgets.QSizePolicy.Policy.Expanding,
         )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.perioder.sizePolicy().hasHeightForWidth())
-        self.perioder.setSizePolicy(sizePolicy)
-        self.perioder.setText("")
-        self.perioder.setObjectName("perioder")
-        self.horizontalLayout.addWidget(self.perioder)
+        sizePolicy.setHeightForWidth(
+            self.perioder_button.sizePolicy().hasHeightForWidth()
+        )
+        self.perioder_button.setSizePolicy(sizePolicy)
+        self.perioder_button.setText("")
+        self.perioder_button.setObjectName("perioder")
+        self.horizontalLayout.addWidget(self.perioder_button)
         self.version = QtWidgets.QLabel(parent=self.splitter)
         sizePolicy = QtWidgets.QSizePolicy(
             QtWidgets.QSizePolicy.Policy.Preferred,

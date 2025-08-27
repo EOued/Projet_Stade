@@ -1,0 +1,316 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        height: 100%;
+        display: grid;
+        grid-template-columns: 4% 1.5% repeat(7, 13.5%);
+        grid-template-rows: repeat(51, 1.97%);
+      }
+      @page {
+        margin: 5px; /* Sets 2cm margin on all sides */
+      }
+
+      .filling {
+        display: flex;
+        border: 1px solid;
+        grid-row: span 2;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .day {
+        display: flex;
+        grid-row: 1 / span 2;
+        border: 1px solid;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .hour {
+        display: flex;
+        grid-column: 1;
+        justify-content: right;
+        align-items: center;
+        padding-right: 3px;
+      }
+
+      .hour_filler {
+        grid-column: 2;
+        border-bottom: 1px solid;
+        border-top: 1px solid;
+        border-right: 1px solid;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Days -->
+    <div class="day" style="grid-column: 3">Lundi</div>
+    <div class="day" style="grid-column: 4">Mardi</div>
+    <div class="day" style="grid-column: 5">Mercredi</div>
+    <div class="day" style="grid-column: 6">Jeudi</div>
+    <div class="day" style="grid-column: 7">Vendredi</div>
+    <div class="day" style="grid-column: 8">Samedi</div>
+    <div class="day" style="grid-column: 9">Dimanche</div>
+
+    <!-- Hours -->
+    <div class="hour" style="grid-row: 1"></div>
+    <div class="hour" style="grid-row: 2 / span 2">0h</div>
+    <div class="hour" style="grid-row: 4 / span 2">1h</div>
+    <div class="hour" style="grid-row: 6 / span 2">2h</div>
+    <div class="hour" style="grid-row: 8 / span 2">3h</div>
+    <div class="hour" style="grid-row: 10 / span 2">4h</div>
+    <div class="hour" style="grid-row: 12 / span 2">5h</div>
+    <div class="hour" style="grid-row: 14 / span 2">6h</div>
+    <div class="hour" style="grid-row: 16 / span 2">7h</div>
+    <div class="hour" style="grid-row: 18 / span 2">8h</div>
+    <div class="hour" style="grid-row: 20 / span 2">9h</div>
+    <div class="hour" style="grid-row: 22 / span 2">10h</div>
+    <div class="hour" style="grid-row: 24 / span 2">11h</div>
+    <div class="hour" style="grid-row: 26 / span 2">12h</div>
+    <div class="hour" style="grid-row: 28 / span 2">13h</div>
+    <div class="hour" style="grid-row: 30 / span 2">14h</div>
+    <div class="hour" style="grid-row: 32 / span 2">15h</div>
+    <div class="hour" style="grid-row: 34 / span 2">16h</div>
+    <div class="hour" style="grid-row: 36 / span 2">17h</div>
+    <div class="hour" style="grid-row: 38 / span 2">18h</div>
+    <div class="hour" style="grid-row: 40 / span 2">19h</div>
+    <div class="hour" style="grid-row: 42 / span 2">20h</div>
+    <div class="hour" style="grid-row: 44 / span 2">21h</div>
+    <div class="hour" style="grid-row: 46 / span 2">22h</div>
+    <div class="hour" style="grid-row: 48 / span 2">23h</div>
+    <div class="hour" style="grid-row: 50"></div>
+
+    <!-- Hours filler -->
+    <div
+      class="hour_filler"
+      style="grid-row: 1 / span 2; border-top: 0px"
+    ></div>
+    <div class="hour_filler" style="grid-row: 3 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 5 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 7 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 9 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 11 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 13 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 15 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 17 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 19 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 21 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 23 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 25 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 27 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 29 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 31 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 33 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 35 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 37 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 39 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 41 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 43 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 45 / span 2"></div>
+    <div class="hour_filler" style="grid-row: 47 / span 2"></div>
+    <div
+      class="hour_filler"
+      style="grid-row: 49 / span 2; border-bottom: 0px"
+    ></div>
+
+    <!-- Filling -->
+
+    <!-- 0h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 1h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 2h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 3h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 4h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 5h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 6h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 7h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 8h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 9h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 10h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 11h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 12h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 13h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 14h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 15h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 16h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 17h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 18h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 19h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 20h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 21h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 22h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <!-- 23h -->
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+    <div class="filling"></div>
+  </body>
+</html>

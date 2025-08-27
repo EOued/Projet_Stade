@@ -16,6 +16,7 @@ Var = Enum(
         "OPEN",
         "SAVE",
         "SAVEAS",
+        "EXTRACTPDF",
         "EXECUTE",
         "IDENTIFIER",
         "TYPE",
@@ -55,6 +56,7 @@ Var = Enum(
         "EXECUTE_PERIOD_FAIL",
         "EXECUTE_SUCCESS",
         "LOAD_FILE_MODIFIED",
+        "BAD_SCHEDULE",
     ],
     start=0,
 )

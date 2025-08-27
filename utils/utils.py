@@ -270,11 +270,23 @@ def get_from_sched_file(path, metadata: dict):
             return file.read()
 
 
+def sched_clear_nonft(path: str):
+    _content = ""
+    if os.path.exists(path):
+        with zipfile.ZipFile(path, "r") as zipped_f:
+            for file in zipped_f.namelist():
+                if file == "FT":
+                    with zipped_f.open(file) as f:
+                        _content = f.read()
+        os.remove(path)
+        with zipfile.ZipFile(path, "w") as zipped_f:
+            zipped_f.writestr("FT", _content)
+
+
 def add_to_sched_file(path: str, metadata: dict, data):
     filename = filename_from_metadata(metadata)
-    if filename == "FT":
-        print("MODIFIED FT")
     _files, _content = [], []
+    print(os.path.exists(path))
     if not zipfile.is_zipfile(path):
         os.remove(path)
     if os.path.exists(path):

@@ -1,4 +1,4 @@
-from python_core.default import DAYS
+from python_core.default import DAYS, FieldPortion
 from enum import Enum
 
 from copy import deepcopy
@@ -39,6 +39,7 @@ class Field:
         ]
 
         self.teams = [{}, {}, {}, {}, {}, {}, {}]
+        self.portion = FieldPortion.WHOLE
 
     def reset(self):
         self.teams = [{}, {}, {}, {}, {}, {}, {}]
