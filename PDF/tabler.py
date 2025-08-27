@@ -1,4 +1,9 @@
-from weasyprint import HTML
+import os
+import sys
+
+from PySide6.QtCore import QMarginsF
+from PySide6.QtGui import QPainter, QPdfWriter
+from PySide6.QtWebEngineWidgets import QWebEngineView
 
 
 class Tabler:
@@ -16,4 +21,16 @@ class Tabler:
 
     def save_pdf(self, path):
         text = "".join(self.html_content)
-        HTML(string=text).write_pdf(path)
+        web_view = QWebEngineView()
+        web_view.setHtml(text)
+
+        def convert_to_pdf(success):
+            if not success:
+                return
+            writer = QPdfWriter(path)
+            writer.setPageMargins(QMarginsF(10, 10, 10, 10))
+            painter = QPainter(writer)
+            web_view.page().printToPdf(path)
+            painter.end()
+
+        web_view.loadFinished.connect(convert_to_pdf)
